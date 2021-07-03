@@ -146,6 +146,15 @@ public class Option {
         this.system = system;
     }
 
+    public Phone getPhone() {
+        return phone;
+    }
+
+    public void setPhone(Phone phone) {
+        this.phone = phone;
+    }
+    
+
     public Option(int id, String screenSize, String screenTechnology, String cameraBack, String cameraFont, String chipset, String RAM, String memory, String battery, String SIM, String system, Phone phone) {
         this.id = id;
         this.screenSize = screenSize;

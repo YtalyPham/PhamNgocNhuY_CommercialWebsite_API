@@ -5,6 +5,7 @@
  */
 package com.se.phone.entity;
 
+import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,6 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -59,6 +61,9 @@ public class Phone {
    @ManyToOne
    @JoinColumn(name = "producer_fk")
    private Producer producer;
+   
+   @OneToMany(mappedBy="phone")
+   private List<OrderDetail> orderDetails;
 
     public Phone(int id, String name, Double price, int amount, String status, Double discountPer, byte[] image, Option option, Catagory catagory, Producer producer) {
         this.id = id;
@@ -156,10 +161,21 @@ public class Phone {
         this.producer = producer;
     }
 
+    public List<OrderDetail> getOrderDetails() {
+        return orderDetails;
+    }
+
+    public void setOrderDetails(List<OrderDetail> orderDetails) {
+        this.orderDetails = orderDetails;
+    }
+
     @Override
     public String toString() {
-        return "Phone{" + "id=" + id + ", name=" + name + ", price=" + price + ", amount=" + amount + ", status=" + status + ", discountPer=" + discountPer + ", image=" + image + ", option=" + option + ", catagory=" + catagory + ", producer=" + producer + '}';
+        return "Phone{" + "id=" + id + ", name=" + name + ", price=" + price + ", amount=" + amount + ", status=" + status + ", discountPer=" + discountPer + ", image=" + image + ", option=" + option + ", catagory=" + catagory + ", producer=" + producer + ", orderDetails=" + orderDetails + '}';
     }
+    
+
+    
     
     
 }

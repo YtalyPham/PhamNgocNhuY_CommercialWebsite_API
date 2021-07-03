@@ -61,6 +61,14 @@ public class Catagory {
         this.name = name;
     }
 
+    public List<Phone> getPhones() {
+        return phones;
+    }
+
+    public void setPhones(List<Phone> phones) {
+        this.phones = phones;
+    }
+
     @Override
     public String toString() {
         return "Catagory{" + "id=" + id + ", name=" + name + ", phone=" + phones + '}';
