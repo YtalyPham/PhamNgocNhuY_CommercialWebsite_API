@@ -37,7 +37,7 @@ public class CatagoryController {
         this.catagoryService = catagoryService;
     }
 
-     
+    //SORT
     //http://localhost:8080/catagory?sortBy=name
     @GetMapping("/catagory")
     public List<Catagory> getCatagories(
@@ -47,18 +47,24 @@ public class CatagoryController {
         return catagoryService.getAllSort(page,sortBy).getContent();
                 
     }
-    //http://localhost:8080//catagory/getbyname/smartwatch
-    @GetMapping("/catagory/getbyname/{name}")
-    public List<Catagory> getCatagoriesByName(@PathVariable String name){
-        List<Catagory> list = catagoryService.getAll();
-        List<Catagory> temp=new ArrayList<Catagory>();
-        for(int i=0;i<list.size();i++){
-            if(list.get(i).getName().equalsIgnoreCase(name)){
-                temp.add(list.get(i));
-            }
-        }
-        return temp;
+//    //http://localhost:8080//catagory/getbyname/smartwatch
+//    @GetMapping("/catagory/sort/{name}")
+//    public List<Catagory> sortByName(@PathVariable String name){
+//        List<Catagory> list = catagoryService.getAll();
+//        List<Catagory> temp=new ArrayList<Catagory>();
+//        for(int i=0;i<list.size();i++){
+//            if(list.get(i).getName().equalsIgnoreCase(name)){
+//                temp.add(list.get(i));
+//            }
+//        }
+//        return temp;
+//    }
+    //http://localhost:8080/catagory/search/Tablet
+     @GetMapping("/catagory/search/{name}")
+    public List<Catagory> searchByName(@PathVariable String name){
+        return catagoryService.getAllSearch(name.toLowerCase());
     }
+    
     
     @GetMapping("/catagory/{Id}")
     public Catagory getCatagory(@PathVariable int Id){

@@ -20,6 +20,7 @@ public interface CatagoryService {
     public void deleteById(int id);
     public Page<Catagory> getAllSort(@RequestParam Optional<Integer> page,@RequestParam Optional<String> sortBy);
     public List<Catagory> getAll();
+    public List<Catagory> getAllSearch(String keyword);
     public Catagory getById(int id);
     
 }

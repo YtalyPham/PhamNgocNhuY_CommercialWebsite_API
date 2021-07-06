@@ -45,7 +45,7 @@ public class CatagoryServiceImpl implements CatagoryService{
         return catagoryRepository.findAll(
                 PageRequest.of(
                     page.orElse(0),
-                    5,
+                    25,
                     Sort.Direction.ASC,sortBy.orElse("id")
                 )
         );
@@ -65,6 +65,14 @@ public class CatagoryServiceImpl implements CatagoryService{
 
     @Override
     public List<Catagory> getAll() {
+        return catagoryRepository.findAll();
+    }
+
+    @Override
+    public List<Catagory> getAllSearch(String keyword) {
+        if (keyword != null) {
+            return catagoryRepository.search(keyword);
+        }
         return catagoryRepository.findAll();
     }
 
