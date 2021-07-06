@@ -59,8 +59,19 @@ public class ProducerController {
     
     @PostMapping("/producer")
     public Producer addProducer(@RequestBody Producer p){
-        producerService.save(p);
-        return p;
+        List<Producer> list= producerService.getAll();
+        for (Producer producer : list) {
+            if(producer.getName().equalsIgnoreCase(p.getName())==true){
+                if(producer.getCountry().equalsIgnoreCase(p.getCountry())==true){
+                    throw new RuntimeException("Trùng name và trùng country");  
+                }
+                else{
+                    producerService.save(p);
+                    return p;
+                }
+            }
+        }
+        return null; 
     }
     
     @PutMapping("/producer")

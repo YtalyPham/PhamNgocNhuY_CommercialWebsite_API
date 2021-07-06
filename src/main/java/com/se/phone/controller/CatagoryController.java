@@ -43,18 +43,7 @@ public class CatagoryController {
         return catagoryService.getAllSort(page,sortBy).getContent();
                 
     }
-//    //http://localhost:8080//catagory/getbyname/smartwatch
-//    @GetMapping("/catagory/sort/{name}")
-//    public List<Catagory> sortByName(@PathVariable String name){
-//        List<Catagory> list = catagoryService.getAll();
-//        List<Catagory> temp=new ArrayList<Catagory>();
-//        for(int i=0;i<list.size();i++){
-//            if(list.get(i).getName().equalsIgnoreCase(name)){
-//                temp.add(list.get(i));
-//            }
-//        }
-//        return temp;
-//    }
+
     //http://localhost:8080/catagory/search/Tablet
      @GetMapping("/catagory/search/{name}")
     public List<Catagory> searchByName(@PathVariable String name){
@@ -70,8 +59,20 @@ public class CatagoryController {
     
     @PostMapping("/catagory")
     public Catagory addCatagory(@RequestBody Catagory c){
-        catagoryService.save(c);
-        return c;
+        int temp=0;
+        List<Catagory> l= catagoryService.getAll();
+        for (int i=0;i<l.size();i++) {
+            if (l.get(i).getName().equalsIgnoreCase(c.getName())==true) {
+               throw new RuntimeException("Thêm trùng name");
+            } else {
+               temp++;
+            }
+        }
+        if(temp!=0){
+            catagoryService.save(c);
+            return c;
+        }
+        return null;
     }
     
     @PutMapping("/catagory")
