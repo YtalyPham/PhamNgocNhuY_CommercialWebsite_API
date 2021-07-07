@@ -5,10 +5,58 @@
  */
 package com.se.phone.service.impl;
 
+import com.se.phone.entity.Catagory;
+import com.se.phone.entity.Option;
+import com.se.phone.reposity.OptionRepository;
+import com.se.phone.service.OptionService;
+import java.util.List;
+import java.util.Optional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
+
 /**
  *
  * @author PhamNgocNhuY_18055121
  */
-public class OptionServiceImpl {
+@Service
+public class OptionServiceImpl implements OptionService{
+    private OptionRepository optionRepository;
+    @Autowired
+    public OptionServiceImpl(OptionRepository optionRepository) {
+        this.optionRepository = optionRepository;
+    }
     
+   @Override
+    public Option save(Option c) {
+        return optionRepository.save(c);
+    }
+
+    @Override
+    public void deleteById(int id) {
+        optionRepository.deleteById(id);
+    }
+
+     
+    @Override
+    public Option getById(int id) {
+        Optional<Option> o= optionRepository.findById(id);
+        Option option= null;
+        if(o.isPresent()){
+            option=o.get();
+        }else{
+            throw new RuntimeException("Did not find Id"+ id);
+        }
+        return option;
+    }
+
+    @Override
+    public List<Option> getAll() {
+        return optionRepository.findAll();
+    }
+
+     
 }

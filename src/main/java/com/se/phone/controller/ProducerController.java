@@ -60,16 +60,18 @@ public class ProducerController {
     @PostMapping("/producer")
     public Producer addProducer(@RequestBody Producer p){
         List<Producer> list= producerService.getAll();
-        for (Producer producer : list) {
-            if(producer.getName().equalsIgnoreCase(p.getName())==true){
-                if(producer.getCountry().equalsIgnoreCase(p.getCountry())==true){
-                    throw new RuntimeException("Trùng name và trùng country");  
-                }
-                else{
-                    producerService.save(p);
-                    return p;
-                }
+        int temp=0;
+        for (int i=0;i<list.size();i++) {
+            if(list.get(i).getName().equalsIgnoreCase(p.getName())==true){
+                if(list.get(i).getCountry().equalsIgnoreCase(p.getCountry())==true){
+                    temp++;
+                    throw new RuntimeException("Trùng name và Trùng country");   
+                }  
             }
+        }
+        if(temp==0){
+            producerService.save(p);
+            return p;
         }
         return null; 
     }

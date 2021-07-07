@@ -63,12 +63,11 @@ public class CatagoryController {
         List<Catagory> l= catagoryService.getAll();
         for (int i=0;i<l.size();i++) {
             if (l.get(i).getName().equalsIgnoreCase(c.getName())==true) {
+                temp++;
                throw new RuntimeException("Thêm trùng name");
-            } else {
-               temp++;
-            }
+            }  
         }
-        if(temp!=0){
+        if(temp==0){
             catagoryService.save(c);
             return c;
         }
