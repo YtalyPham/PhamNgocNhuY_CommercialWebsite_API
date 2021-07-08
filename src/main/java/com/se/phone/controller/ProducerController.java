@@ -5,16 +5,18 @@
  */
 package com.se.phone.controller;
 
-import com.se.phone.entity.Catagory;
 import com.se.phone.entity.Producer;
-import com.se.phone.exception.CatagoryException;
 import com.se.phone.exception.ProducerException;
 import com.se.phone.service.ProducerService;
+import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.ReflectionUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -85,7 +87,18 @@ public class ProducerController {
             return producer;
           
     }
-    
+    @PatchMapping("/producer/{id}")
+     public Producer patchProducer(@PathVariable int id,@RequestBody Map<Object,Object> p){
+            Producer producer= producerService.getById(id);
+            p.forEach((k,v)->{
+                Field field=ReflectionUtils.findField(Producer.class, (String) k);
+                field.setAccessible(true);
+                ReflectionUtils.setField(field, producer, v);
+            });
+            producerService.save(producer);
+            return producer;
+          
+    }
     @DeleteMapping("/producer/{Id}")
     public String deteteCatagory(@PathVariable int Id){
         Producer p= producerService.getById(Id);

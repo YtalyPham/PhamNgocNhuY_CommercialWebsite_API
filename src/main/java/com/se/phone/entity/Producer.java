@@ -75,7 +75,7 @@ public class Producer {
 
     @Override
     public String toString() {
-        return "Producer{" + "id=" + id + ", name=" + name + ", country=" + country + ", phone=" + phones + '}';
+        return "Producer{" + "id=" + id + ", name=" + name + ", country=" + country + '}';
     }
 
    

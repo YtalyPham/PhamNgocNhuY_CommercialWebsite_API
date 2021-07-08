@@ -37,10 +37,9 @@ public class Catagory {
     public Catagory() {
     }
 
-    public Catagory(int id, String name, List<Phone> phone) {
+    public Catagory(int id, String name) {
         this.id = id;
         this.name = name;
-        this.phones = phone;
     }
 
     
@@ -71,8 +70,10 @@ public class Catagory {
 
     @Override
     public String toString() {
-        return "Catagory{" + "id=" + id + ", name=" + name + ", phone=" + phones + '}';
+        return "Catagory{" + "id=" + id + ", name=" + name + '}';
     }
+
+    
 
     
     

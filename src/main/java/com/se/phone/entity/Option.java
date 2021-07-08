@@ -177,8 +177,10 @@ public class Option {
 
     @Override
     public String toString() {
-        return "Option{" + "id=" + id + ", screenSize=" + screenSize + ", screenTechnology=" + screenTechnology + ", cameraBack=" + cameraBack + ", cameraFont=" + cameraFont + ", chipset=" + chipset + ", RAM=" + RAM + ", memory=" + memory + ", battery=" + battery + ", SIM=" + SIM + ", system=" + system + ", phone=" + phone + '}';
+        return "Option{" + "id=" + id + ", screenSize=" + screenSize + ", screenTechnology=" + screenTechnology + ", cameraBack=" + cameraBack + ", cameraFont=" + cameraFont + ", chipset=" + chipset + ", RAM=" + RAM + ", memory=" + memory + ", battery=" + battery + ", SIM=" + SIM + ", system=" + system + '}';
     }
+
+    
 
     
     

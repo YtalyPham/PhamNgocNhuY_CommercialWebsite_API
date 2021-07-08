@@ -171,8 +171,10 @@ public class Phone {
 
     @Override
     public String toString() {
-        return "Phone{" + "id=" + id + ", name=" + name + ", price=" + price + ", amount=" + amount + ", status=" + status + ", discountPer=" + discountPer + ", image=" + image + ", option=" + option + ", catagory=" + catagory + ", producer=" + producer + ", orderDetails=" + orderDetails + '}';
+        return "Phone{" + "id=" + id + ", name=" + name + ", price=" + price + ", amount=" + amount + ", status=" + status + ", discountPer=" + discountPer + ", image=" + image + ", option=" + option + ", catagory=" + catagory + ", producer=" + producer + '}';
     }
+
+    
     
 
     

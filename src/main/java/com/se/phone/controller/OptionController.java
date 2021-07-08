@@ -6,12 +6,17 @@
 package com.se.phone.controller;
 
 import com.se.phone.entity.Option;
+import com.se.phone.entity.Producer;
 import com.se.phone.exception.OptionException;
 import com.se.phone.service.OptionService;
+import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.ReflectionUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -62,6 +67,18 @@ public class OptionController {
             option.setSystem(o.getSystem());
             optionService.save(option);
             return option;    
+    }
+    @PatchMapping("/option/{id}")
+     public Option patchOption(@PathVariable int id,@RequestBody Map<Object,Object> p){
+            Option option= optionService.getById(id);
+            p.forEach((k,v)->{
+                Field field=ReflectionUtils.findField(Option.class, (String) k);
+                field.setAccessible(true);
+                ReflectionUtils.setField(field, option, v);
+            });
+            optionService.save(option);
+            return option;
+          
     }
     
     @DeleteMapping("/option/{Id}")
