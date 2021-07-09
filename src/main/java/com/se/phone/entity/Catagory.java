@@ -5,15 +5,11 @@
  */
 package com.se.phone.entity;
 
-import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
@@ -31,8 +27,8 @@ public class Catagory {
     @Column(name="name")
     private String name;
 
-    @OneToMany(mappedBy="catagory")
-    private List<Phone> phones;
+//    @OneToMany(mappedBy="catagory")
+//    private List<Phone> phones;
     
     public Catagory() {
     }
@@ -60,13 +56,13 @@ public class Catagory {
         this.name = name;
     }
 
-    public List<Phone> getPhones() {
-        return phones;
-    }
-
-    public void setPhones(List<Phone> phones) {
-        this.phones = phones;
-    }
+//    public List<Phone> getPhones() {
+//        return phones;
+//    }
+//
+//    public void setPhones(List<Phone> phones) {
+//        this.phones = phones;
+//    }
 
     @Override
     public String toString() {

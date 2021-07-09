@@ -6,7 +6,7 @@
 package com.se.phone.controller;
 
 import com.se.phone.entity.Producer;
-import com.se.phone.exception.ProducerException;
+import com.se.phone.exception.ApiRequestException;
 import com.se.phone.service.ProducerService;
 import java.lang.reflect.Field;
 import java.util.List;
@@ -37,7 +37,7 @@ public class ProducerController {
     }
     
     //SORT
-    //http://localhost:8080/produce?sortBy=name
+    //http://localhost:8080/Ytalyphone/produce?sortBy=name
     @GetMapping("/producer")
     public List<Producer> getCatagories(
             @RequestParam Optional<Integer> page,
@@ -46,7 +46,7 @@ public class ProducerController {
         return producerService.getAllSort(page,sortBy).getContent();
                 
     }
-    //http://localhost:8080/producer/search/Xiaomi
+    //http://localhost:8080/Ytalyphone/producer/search/Xiaomi
      @GetMapping("/producer/search/{name}")
     public List<Producer> searchByName(@PathVariable String name){
         return producerService.getAllSearch(name.toLowerCase());
@@ -67,7 +67,7 @@ public class ProducerController {
             if(list.get(i).getName().equalsIgnoreCase(p.getName())==true){
                 if(list.get(i).getCountry().equalsIgnoreCase(p.getCountry())==true){
                     temp++;
-                    throw new RuntimeException("Trùng name và Trùng country");   
+                    throw new ApiRequestException("Trùng name và Trùng country");   
                 }  
             }
         }
@@ -102,13 +102,8 @@ public class ProducerController {
     @DeleteMapping("/producer/{Id}")
     public String deteteCatagory(@PathVariable int Id){
         Producer p= producerService.getById(Id);
-        if(p==null){
-            throw new ProducerException(Id);
-        }else{
-            producerService.deleteById(Id);
-            return "Delete sucess ProducerId= "+Id;
-        }
-        
+        producerService.deleteById(Id);
+        return "Delete sucess ProducerId= "+Id;
     }
     
     

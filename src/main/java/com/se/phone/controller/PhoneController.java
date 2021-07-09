@@ -9,7 +9,7 @@ import com.se.phone.entity.Catagory;
 import com.se.phone.entity.Option;
 import com.se.phone.entity.Phone;
 import com.se.phone.entity.Producer;
-import com.se.phone.exception.ProducerException;
+import com.se.phone.exception.ApiRequestException;
 import com.se.phone.service.CatagoryService;
 import com.se.phone.service.OptionService;
 import com.se.phone.service.PhoneService;
@@ -48,7 +48,7 @@ public class PhoneController {
         this.producerService = producerService;
     }
     //SORT
-    //http://localhost:8080/phone?sortBy=name
+    //http://localhost:8080/Ytalyphone/phone?sortBy=name
     @GetMapping("/phone")
     public List<Phone> getCatagories(
             @RequestParam Optional<Integer> page,
@@ -59,7 +59,7 @@ public class PhoneController {
     }
 
    
-    //http://localhost:8080/phone/search/Xiaomi
+    //http://localhost:8080/Ytalyphone/phone/search/Xiaomi
      @GetMapping("/phone/search/{name}")
     public List<Phone> searchByName(@PathVariable String name){
         return phoneService.getAllSearch(name.toLowerCase());
@@ -80,7 +80,7 @@ public class PhoneController {
             if(list.get(i).getName().equalsIgnoreCase(p.getName())==true){
                  
                     temp++;
-                    throw new RuntimeException("Trùng name");   
+                    throw new ApiRequestException("Trùng name");   
                 
             }
         }
@@ -129,15 +129,8 @@ public class PhoneController {
     @DeleteMapping("/phone/{Id}")
     public String detetePhone(@PathVariable int Id){
         Phone p= phoneService.getById(Id);
-        if(p==null){
-            throw new ProducerException(Id);
-        }else{
-            phoneService.deleteById(Id);
-            return "Delete sucess PhoneId= "+Id;
-        }
-        
+        phoneService.deleteById(Id);
+        return "Delete sucess PhoneId= "+Id;
     }
-    
-    
-    
+ 
 }

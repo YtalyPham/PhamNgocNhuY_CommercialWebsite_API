@@ -6,7 +6,7 @@
 package com.se.phone.controller;
 
 import com.se.phone.entity.Catagory;
-import com.se.phone.exception.CatagoryException;
+import com.se.phone.exception.ApiRequestException;
 import com.se.phone.service.CatagoryService;
 import java.util.List;
 import java.util.Optional;
@@ -35,7 +35,7 @@ public class CatagoryController {
     }
 
     //SORT
-    //http://localhost:8080/catagory?sortBy=name
+    //http://localhost:8080/Ytalyphone/catagory?sortBy=name
     @GetMapping("/catagory")
     public List<Catagory> getCatagories(
             @RequestParam Optional<Integer> page,
@@ -45,7 +45,7 @@ public class CatagoryController {
                 
     }
 
-    //http://localhost:8080/catagory/search/Tablet
+    //http://localhost:8080/Ytalyphone/catagory/search/Tablet
      @GetMapping("/catagory/search/{name}")
     public List<Catagory> searchByName(@PathVariable String name){
         return catagoryService.getAllSearch(name.toLowerCase());
@@ -65,7 +65,7 @@ public class CatagoryController {
         for (int i=0;i<l.size();i++) {
             if (l.get(i).getName().equalsIgnoreCase(c.getName())==true) {
                 temp++;
-               throw new RuntimeException("Thêm trùng name");
+               throw new ApiRequestException("Thêm trùng name");
             }  
         }
         if(temp==0){
@@ -88,13 +88,8 @@ public class CatagoryController {
     @DeleteMapping("/catagory/{Id}")
     public String deteteCatagory(@PathVariable int Id){
         Catagory c= catagoryService.getById(Id);
-        if(c==null){
-            throw new CatagoryException(Id);
-        }else{
-            catagoryService.deleteById(Id);
-            return "Delete sucess CatagoryId= "+Id;
-        }
-        
+        catagoryService.deleteById(Id);
+        return "Delete sucess CatagoryId= "+Id;    
     }
     
 }

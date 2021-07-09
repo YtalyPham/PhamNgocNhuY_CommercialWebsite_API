@@ -5,18 +5,14 @@
  */
 package com.se.phone.service.impl;
 
-import com.se.phone.entity.Catagory;
 import com.se.phone.entity.Option;
+import com.se.phone.exception.ApiRequestException;
 import com.se.phone.reposity.OptionRepository;
 import com.se.phone.service.OptionService;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  *
@@ -48,7 +44,7 @@ public class OptionServiceImpl implements OptionService{
         if(o.isPresent()){
             option=o.get();
         }else{
-            throw new RuntimeException("Did not find Id"+ id);
+            throw new ApiRequestException("Did not find Id "+ id);
         }
         return option;
     }

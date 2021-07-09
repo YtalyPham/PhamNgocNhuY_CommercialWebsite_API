@@ -6,6 +6,7 @@
 package com.se.phone.service.impl;
 
 import com.se.phone.entity.Catagory;
+import com.se.phone.exception.ApiRequestException;
 import com.se.phone.reposity.CatagoryRepository;
 import com.se.phone.service.CatagoryService;
 import java.util.List;
@@ -58,7 +59,7 @@ public class CatagoryServiceImpl implements CatagoryService{
         if(c.isPresent()){
             catagory=c.get();
         }else{
-            throw new RuntimeException("Did not find Id"+ id);
+            throw new ApiRequestException("Did not find Id "+ id);
         }
         return catagory;
     }

@@ -61,9 +61,9 @@ public class Phone {
    @ManyToOne
    @JoinColumn(name = "producer_fk")
    private Producer producer;
-   
-   @OneToMany(mappedBy="phone")
-   private List<OrderDetail> orderDetails;
+  
+//   @OneToMany(mappedBy="phone")
+//   private List<OrderDetail> orderDetails;
 
     public Phone(int id, String name, Double price, int amount, String status, Double discountPer, byte[] image, Option option, Catagory catagory, Producer producer) {
         this.id = id;
@@ -159,14 +159,6 @@ public class Phone {
 
     public void setProducer(Producer producer) {
         this.producer = producer;
-    }
-
-    public List<OrderDetail> getOrderDetails() {
-        return orderDetails;
-    }
-
-    public void setOrderDetails(List<OrderDetail> orderDetails) {
-        this.orderDetails = orderDetails;
     }
 
     @Override

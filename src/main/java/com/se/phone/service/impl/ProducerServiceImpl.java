@@ -5,8 +5,9 @@
  */
 package com.se.phone.service.impl;
 
-import com.se.phone.entity.Catagory;
+
 import com.se.phone.entity.Producer;
+import com.se.phone.exception.ApiRequestException;
 import com.se.phone.reposity.ProducerRepository;
 import com.se.phone.service.ProducerService;
 import java.util.List;
@@ -60,7 +61,7 @@ public class ProducerServiceImpl implements ProducerService{
         if(p.isPresent()){
             producer=p.get();
         }else{
-            throw new RuntimeException("Did not find Id"+ id);
+            throw new ApiRequestException("Did not find Id "+ id);
         }
         return producer;
     }

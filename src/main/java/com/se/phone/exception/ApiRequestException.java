@@ -9,11 +9,14 @@ package com.se.phone.exception;
  *
  * @author PhamNgocNhuY_18055121
  */
-public class OptionException extends RuntimeException{
+public class ApiRequestException extends RuntimeException{
 
-    public OptionException(int id) {
-        super("Could not found Option id= "+ id);
+    public ApiRequestException(String message) {
+        super(message);
+    }
+
+    public ApiRequestException(String message, Throwable cause) {
+        super(message, cause);
     }
     
 }
-

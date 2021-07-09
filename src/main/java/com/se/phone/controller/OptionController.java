@@ -6,8 +6,6 @@
 package com.se.phone.controller;
 
 import com.se.phone.entity.Option;
-import com.se.phone.entity.Producer;
-import com.se.phone.exception.OptionException;
 import com.se.phone.service.OptionService;
 import java.lang.reflect.Field;
 import java.util.List;
@@ -65,6 +63,7 @@ public class OptionController {
             option.setBattery(o.getBattery());
             option.setSIM(o.getSIM());
             option.setSystem(o.getSystem());
+            //option.set
             optionService.save(option);
             return option;    
     }
@@ -84,13 +83,9 @@ public class OptionController {
     @DeleteMapping("/option/{Id}")
     public String deteteOption(@PathVariable int Id){
         Option o= optionService.getById(Id);
-        if(o==null){
-            throw new OptionException(Id);
-        }else{
-            optionService.deleteById(Id);
-            return "Delete sucess OptionId= "+Id;
-        }
-        
+        optionService.deleteById(Id);
+        return "Delete sucess OptionId= "+Id;
+     
     }
     
 }
