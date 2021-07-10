@@ -37,7 +37,7 @@ public class ProducerController {
     }
     
     //SORT
-    //http://localhost:8080/Ytalyphone/produce?sortBy=name
+    //http://localhost:8080/Ytalyphone/producer?sortBy=name
     @GetMapping("/producer")
     public List<Producer> getCatagories(
             @RequestParam Optional<Integer> page,

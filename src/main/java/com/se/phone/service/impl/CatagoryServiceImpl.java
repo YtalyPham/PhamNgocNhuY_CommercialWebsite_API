@@ -5,6 +5,7 @@
  */
 package com.se.phone.service.impl;
 
+ 
 import com.se.phone.entity.Catagory;
 import com.se.phone.exception.ApiRequestException;
 import com.se.phone.reposity.CatagoryRepository;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Service
 public class CatagoryServiceImpl implements CatagoryService{
     private CatagoryRepository catagoryRepository;
+    //private ModelMapper modelMapper;
     @Autowired
     public CatagoryServiceImpl(CatagoryRepository catagoryRepository) {
         this.catagoryRepository = catagoryRepository;
@@ -33,6 +35,8 @@ public class CatagoryServiceImpl implements CatagoryService{
     public Catagory save(Catagory c) {
         return catagoryRepository.save(c);
     }
+
+    
 
     @Override
     public void deleteById(int id) {
@@ -76,7 +80,15 @@ public class CatagoryServiceImpl implements CatagoryService{
         }
         return catagoryRepository.findAll();
     }
-
-     
+//    //convert Entity to DTO
+//    public CatagoryDTO mapToDTO(Catagory catagory){
+//        CatagoryDTO catagoryDTO=modelMapper.map(catagory, CatagoryDTO.class);
+//        return catagoryDTO;
+//    }
+//    //convert DTO to Entity 
+//    public Catagory mapToEntity(CatagoryDTO catagoryDTO){
+//        Catagory catagory= modelMapper.map(catagoryDTO, Catagory.class);
+//        return catagory;
+//    }
     
 }
