@@ -11,6 +11,7 @@ import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,23 +35,27 @@ public class OptionController {
     }
     
     @GetMapping("/option")
+    //@PreAuthorize("hasRole('PM') or hasRole('ADMIN')")
     public List<Option> getAllOption(){
         return optionService.getAll();
                 
     }
     @GetMapping("/option/{Id}")
+    //@PreAuthorize("hasRole('PM') or hasRole('ADMIN')")
     public Option getOption(@PathVariable int Id){
         Option o = optionService.getById(Id);
         return o;
     }
     
     @PostMapping("/option")
+    @PreAuthorize("hasRole('PM') or hasRole('ADMIN')")
     public Option addOption(@RequestBody Option o){
         optionService.save(o);
         return o;
     }
 
     @PutMapping("/option")
+    @PreAuthorize("hasRole('PM') or hasRole('ADMIN')")
     public Option updateOption(@RequestBody Option o){
             Option option= optionService.getById(o.getId());
             option.setScreenSize(o.getScreenSize());  
@@ -68,6 +73,7 @@ public class OptionController {
             return option;    
     }
     @PatchMapping("/option/{id}")
+    @PreAuthorize("hasRole('PM') or hasRole('ADMIN')")
      public Option patchOption(@PathVariable int id,@RequestBody Map<Object,Object> p){
             Option option= optionService.getById(id);
             p.forEach((k,v)->{
@@ -81,6 +87,7 @@ public class OptionController {
     }
     
     @DeleteMapping("/option/{Id}")
+    @PreAuthorize("hasRole('PM') or hasRole('ADMIN')")
     public String deteteOption(@PathVariable int Id){
         Option o= optionService.getById(Id);
         optionService.deleteById(Id);

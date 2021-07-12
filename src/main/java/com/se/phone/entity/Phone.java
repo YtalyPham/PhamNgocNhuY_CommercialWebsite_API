@@ -5,15 +5,20 @@
  */
 package com.se.phone.entity;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.Lob;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -46,9 +51,8 @@ public class Phone {
     @Column(name="discountPer")
     private Double discountPer;
     
-    @Lob
-    @Column(name = "image")
-    private byte[] image;
+    @Column(name = "rating")
+    private double rating;
     
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "option_fk", referencedColumnName = "id")
@@ -61,23 +65,37 @@ public class Phone {
    @ManyToOne
    @JoinColumn(name = "producer_fk")
    private Producer producer;
+   
+   @ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name = "product_image", 
+		joinColumns = @JoinColumn(name = "product_id"), 
+		inverseJoinColumns = @JoinColumn(name = "image_id"))
+	private List<Image> images;
   
 //   @OneToMany(mappedBy="phone")
 //   private List<OrderDetail> orderDetails;
 
-    public Phone(int id, String name, Double price, int amount, String status, Double discountPer, byte[] image, Option option, Catagory catagory, Producer producer) {
-        this.id = id;
-        this.name = name;
-        this.price = price;
-        this.amount = amount;
-        this.status = status;
-        this.discountPer = discountPer;
-        this.image = image;
-        this.option = option;
-        this.catagory = catagory;
-        this.producer = producer;
+    @Override
+    public String toString() {
+        return "Phone{" + "id=" + id + ", name=" + name + ", price=" + price + ", amount=" + amount + ", status=" + status + ", discountPer=" + discountPer + ", rating=" + rating + ", option=" + option + ", catagory=" + catagory + ", producer=" + producer + ", images=" + images + '}';
     }
 
+    public double getRating() {
+        return rating;
+    }
+
+    public void setRating(double rating) {
+        this.rating = rating;
+    }
+
+    public List<Image> getImages() {
+        return images;
+    }
+
+    public void setImages(List<Image> images) {
+        this.images = images;
+    }
+    
     public Phone() {
     }
 
@@ -129,14 +147,6 @@ public class Phone {
         this.discountPer = discountPer;
     }
 
-    public byte[] getImage() {
-        return image;
-    }
-
-    public void setImage(byte[] image) {
-        this.image = image;
-    }
-
     public Option getOption() {
         return option;
     }
@@ -161,10 +171,7 @@ public class Phone {
         this.producer = producer;
     }
 
-    @Override
-    public String toString() {
-        return "Phone{" + "id=" + id + ", name=" + name + ", price=" + price + ", amount=" + amount + ", status=" + status + ", discountPer=" + discountPer + ", image=" + image + ", option=" + option + ", catagory=" + catagory + ", producer=" + producer + '}';
-    }
+    
 
     
     

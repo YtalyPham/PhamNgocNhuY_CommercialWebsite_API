@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -50,7 +51,8 @@ public class PhoneController {
     //SORT
     //http://localhost:8080/Ytalyphone/phone?sortBy=name
     @GetMapping("/phone")
-    public List<Phone> getCatagories(
+     
+    public List<Phone> getPhones(
             @RequestParam Optional<Integer> page,
             @RequestParam Optional<String> sortBy){
         //getContent() output list of Catagory or not output go Page<Catagory>
@@ -61,18 +63,21 @@ public class PhoneController {
    
     //http://localhost:8080/Ytalyphone/phone/search/Xiaomi
      @GetMapping("/phone/search/{name}")
+      
     public List<Phone> searchByName(@PathVariable String name){
         return phoneService.getAllSearch(name.toLowerCase());
     }
     
     
     @GetMapping("/phone/{Id}")
+     
     public Phone getPhone(@PathVariable int Id){
         Phone p = phoneService.getById(Id);
         return p;
     }
     
     @PostMapping("/phone")
+    @PreAuthorize("hasRole('PM') or hasRole('ADMIN')")
     public Phone addPhone(@RequestBody Phone p){
         List<Phone> list= phoneService.getAll();
         int temp=0;
@@ -92,6 +97,7 @@ public class PhoneController {
     }
  
     @PutMapping("/phone")
+    @PreAuthorize("hasRole('PM') or hasRole('ADMIN')")
     public Phone updatePhone(@RequestBody Phone p){
             Phone phone= phoneService.getById(p.getId());
             phone.setName(p.getName());  
@@ -99,7 +105,7 @@ public class PhoneController {
             phone.setAmount(p.getAmount());  
             phone.setStatus(p.getStatus());
             phone.setDiscountPer(p.getDiscountPer());  
-            phone.setImage(p.getImage());
+             
             ///////////////////////////////find and set by id for option catagory producer
             Option o= optionService.getById(p.getOption().getId());
             Catagory c= catagoryService.getById(p.getCatagory().getId());
@@ -114,6 +120,7 @@ public class PhoneController {
           
     }
     @PatchMapping("/phone/{id}")
+    @PreAuthorize("hasRole('PM') or hasRole('ADMIN')")
      public Phone patchPhone(@PathVariable int id,@RequestBody Map<Object,Object> p){
             Phone phone= phoneService.getById(id);
             p.forEach((k,v)->{
@@ -127,6 +134,7 @@ public class PhoneController {
     }
     
     @DeleteMapping("/phone/{Id}")
+    @PreAuthorize("hasRole('PM') or hasRole('ADMIN')")
     public String detetePhone(@PathVariable int Id){
         Phone p= phoneService.getById(Id);
         phoneService.deleteById(Id);

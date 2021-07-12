@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author PhamNgocNhuY_18055121
  */
 @RestController
+@PreAuthorize("hasRole('ADMIN')")
 public class UserController {
     private UserService userService;
     @Autowired
@@ -29,13 +30,13 @@ public class UserController {
     
     //http://localhost:8080/Ytalyphone/account/
     @GetMapping("/account")
-	@PreAuthorize("hasRole('ADMIN')")
+	
 	public List<UserDTO> getAllAccounts() {
 		return  userService.getAll();
 	}
         //http://localhost:8080/Ytalyphone/account/searchByName/aaa phai dung ten
         @GetMapping("/account/searchByName/{name}")
-	@PreAuthorize("hasRole('ADMIN')")
+	//@PreAuthorize("hasRole('ADMIN')")
 	public List<UserDTO> getByUserName(@PathVariable String name) {
             List<UserDTO> list=userService.getAll();
             List<UserDTO> l= new ArrayList<>();
@@ -48,7 +49,7 @@ public class UserController {
 	}
         //http://localhost:8080/Ytalyphone/account/searchById/1
         @GetMapping("/account/searchById/{id}")
-	@PreAuthorize("hasRole('ADMIN')")
+	//@PreAuthorize("hasRole('ADMIN')")
 	public UserDTO getById(@PathVariable int id) {
 		return  userService.getById(id);
 	}
