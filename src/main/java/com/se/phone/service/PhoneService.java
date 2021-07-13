@@ -21,6 +21,8 @@ public interface PhoneService {
     public void deleteById(int id);
     public Page<Phone> getAllSort(@RequestParam Optional<Integer> page,@RequestParam Optional<String> sortBy);
     public List<Phone> getAll();
-    public List<Phone> getAllSearch(String keyword);
+    public List<Phone> getAllSearchByName(String keyword);
+    public List<Phone> getAllSearchByCatagory(int id);
+    public List<Phone> getAllSearchByProducer(int id);
     public Phone getById(int id);
 }

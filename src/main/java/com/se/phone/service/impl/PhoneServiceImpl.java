@@ -8,6 +8,7 @@ package com.se.phone.service.impl;
 import com.se.phone.entity.Phone;
 import com.se.phone.entity.Producer;
 import com.se.phone.exception.ApiRequestException;
+import com.se.phone.reposity.CatagoryRepository;
 import com.se.phone.reposity.PhoneRepository;
 import com.se.phone.reposity.ProducerRepository;
 import com.se.phone.service.PhoneService;
@@ -27,15 +28,21 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Service
 public class PhoneServiceImpl implements PhoneService{
     private PhoneRepository phoneRepository;
+    private CatagoryRepository catagoryRepository;
+    private ProducerRepository producerRepository;
     @Autowired
-    public PhoneServiceImpl(PhoneRepository phoneRepository) {
+     public PhoneServiceImpl(PhoneRepository phoneRepository, CatagoryRepository catagoryRepository, ProducerRepository producerRepository) {
         this.phoneRepository = phoneRepository;
+        this.catagoryRepository = catagoryRepository;
+        this.producerRepository = producerRepository;
     }
     
     @Override
     public Phone save(Phone c) {
         return phoneRepository.save(c);
     }
+
+   
     @Override
     public void deleteById(int id) {
         phoneRepository.deleteById(id);
@@ -73,10 +80,29 @@ public class PhoneServiceImpl implements PhoneService{
     
 
     @Override
-    public List<Phone> getAllSearch(String keyword) {
+    public List<Phone> getAllSearchByName(String keyword) {
         if (keyword != null) {
             return phoneRepository.search(keyword);
         }
         return phoneRepository.findAll();
     }
+
+    @Override
+    public List<Phone> getAllSearchByCatagory(int id) {
+         
+        if (String.valueOf(id) != null) {
+            return phoneRepository.searchByCatagory(id);
+        }
+        return phoneRepository.findAll();
+    }
+
+    @Override
+    public List<Phone> getAllSearchByProducer(int id) {
+        if (String.valueOf(id) != null) {
+            return phoneRepository.searchByProducer(id);
+        }
+        return phoneRepository.findAll();
+    }
+    
+    
 }

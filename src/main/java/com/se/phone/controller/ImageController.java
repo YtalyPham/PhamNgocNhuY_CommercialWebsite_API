@@ -59,7 +59,7 @@ public class ImageController {
     List<ResponseImage> files = imageServiceImpl.getAllFiles().map(dbFile -> {
       String fileDownloadUri = ServletUriComponentsBuilder
           .fromCurrentContextPath()
-          .path("/files/")
+          .path("/image/")
           .path(dbFile.getId())
           .toUriString();
 
@@ -90,7 +90,7 @@ public class ImageController {
             if(image.getName().equalsIgnoreCase(id)==true){
                 return new ResponseImage(image.getName(),fileDownloadUri = ServletUriComponentsBuilder
                 .fromCurrentContextPath()
-                .path("/files/")
+                .path("/image/")
                 .path(image.getId())
                 .toUriString(),image.getType(),image.getData().length);
             }

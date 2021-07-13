@@ -5,6 +5,8 @@
  */
 package com.se.phone.controller;
 
+import com.se.phone.converter.PhoneConverter;
+import com.se.phone.dto.PhoneDTO;
 import com.se.phone.entity.Catagory;
 import com.se.phone.entity.Option;
 import com.se.phone.entity.Phone;
@@ -18,6 +20,8 @@ import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.ReflectionUtils;
@@ -41,56 +45,72 @@ public class PhoneController {
     private OptionService optionService;
     private CatagoryService catagoryService;
     private ProducerService producerService;
+    //private ModelMapper modelMapper;
+    private PhoneConverter phoneConverter;
     @Autowired
-    public PhoneController(PhoneService phoneService, OptionService optionService, CatagoryService catagoryService, ProducerService producerService) {
+    public PhoneController(PhoneService phoneService, OptionService optionService, CatagoryService catagoryService, ProducerService producerService, PhoneConverter phoneConverter) {
         this.phoneService = phoneService;
         this.optionService = optionService;
         this.catagoryService = catagoryService;
         this.producerService = producerService;
+        this.phoneConverter = phoneConverter;
     }
+    
     //SORT
     //http://localhost:8080/Ytalyphone/phone?sortBy=name
     @GetMapping("/phone")
      
-    public List<Phone> getPhones(
+    public List<PhoneDTO> getPhones(
             @RequestParam Optional<Integer> page,
             @RequestParam Optional<String> sortBy){
         //getContent() output list of Catagory or not output go Page<Catagory>
-        return phoneService.getAllSort(page,sortBy).getContent();
+        List<Phone> list= phoneService.getAllSort(page,sortBy).getContent();
+        return list.stream().map(phoneConverter::convertToDTO).collect(Collectors.toList()) ;
                 
     }
 
-   
     //http://localhost:8080/Ytalyphone/phone/search/Xiaomi
-     @GetMapping("/phone/search/{name}")
-      
-    public List<Phone> searchByName(@PathVariable String name){
-        return phoneService.getAllSearch(name.toLowerCase());
+     @GetMapping("/phone/searchByName/{name}") 
+    public List<PhoneDTO> searchByName(@PathVariable String name){
+        List<Phone> list= phoneService.getAllSearchByName(name.toLowerCase());
+        return list.stream().map(phoneConverter::convertToDTO).collect(Collectors.toList());
     }
     
+     @GetMapping("/phone/searchByProducer/{id}") 
+    public List<PhoneDTO> searchByProducer(@PathVariable int id){
+        List<Phone> list= phoneService.getAllSearchByProducer(id);
+        return list.stream().map(phoneConverter::convertToDTO).collect(Collectors.toList());
+    }
+    
+     @GetMapping("/phone/searchByCatagory/{id}") 
+    public List<PhoneDTO> searchByCatagory(@PathVariable int id){
+        List<Phone> list= phoneService.getAllSearchByCatagory(id);
+        return list.stream().map(phoneConverter::convertToDTO).collect(Collectors.toList());
+    }
     
     @GetMapping("/phone/{Id}")
-     
-    public Phone getPhone(@PathVariable int Id){
-        Phone p = phoneService.getById(Id);
-        return p;
+    public PhoneDTO getPhone(@PathVariable int Id){
+        Phone phone = phoneService.getById(Id);
+        PhoneDTO phoneDTO= phoneConverter.convertToDTO(phone);
+       
+        return phoneDTO;
     }
     
     @PostMapping("/phone")
     @PreAuthorize("hasRole('PM') or hasRole('ADMIN')")
-    public Phone addPhone(@RequestBody Phone p){
+    public PhoneDTO addPhone(@RequestBody PhoneDTO p){
         List<Phone> list= phoneService.getAll();
         int temp=0;
         for (int i=0;i<list.size();i++) {
             if(list.get(i).getName().equalsIgnoreCase(p.getName())==true){
-                 
                     temp++;
                     throw new ApiRequestException("Trùng name");   
                 
             }
         }
         if(temp==0){
-            phoneService.save(p);
+            Phone phone= phoneConverter.convertToEntity(p);
+            phoneService.save(phone);
             return p;
         }
         return null; 
@@ -98,25 +118,26 @@ public class PhoneController {
  
     @PutMapping("/phone")
     @PreAuthorize("hasRole('PM') or hasRole('ADMIN')")
-    public Phone updatePhone(@RequestBody Phone p){
+    public PhoneDTO updatePhone(@RequestBody PhoneDTO p){
             Phone phone= phoneService.getById(p.getId());
             phone.setName(p.getName());  
             phone.setPrice(p.getPrice());
             phone.setAmount(p.getAmount());  
+            phone.setRating(p.getRating());  
             phone.setStatus(p.getStatus());
             phone.setDiscountPer(p.getDiscountPer());  
              
             ///////////////////////////////find and set by id for option catagory producer
-            Option o= optionService.getById(p.getOption().getId());
-            Catagory c= catagoryService.getById(p.getCatagory().getId());
-            Producer pr= producerService.getById(p.getProducer().getId());
+            Option o= optionService.getById(p.getOptionId());
+            Catagory c= catagoryService.getById(p.getCatagoryId());
+            Producer pr= producerService.getById(p.getProducerId());
             if(o!=null&&c!=null&&pr!=null){
                 phone.setOption(o);  
                 phone.setCatagory(c);
                 phone.setProducer(pr);  
             }
             phoneService.save(phone);
-            return phone;
+            return phoneConverter.convertToDTO(phone);
           
     }
     @PatchMapping("/phone/{id}")
