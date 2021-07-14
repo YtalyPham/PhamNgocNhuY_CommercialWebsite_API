@@ -5,16 +5,16 @@
  */
 package com.se.phone.service;
 
-import com.se.phone.entity.Option;
+import com.se.phone.entity.ProductDetail;
 import java.util.List;
 
 /**
  *
  * @author PhamNgocNhuY_18055121
  */
-public interface OptionService {
-    public Option save(Option c);
+public interface ProductDetailService {
+    public ProductDetail save(ProductDetail c);
     public void deleteById(int id);
-    public List<Option> getAll();  
-    public Option getById(int id);
+    public List<ProductDetail> getAll();  
+    public ProductDetail getById(int id);
 }

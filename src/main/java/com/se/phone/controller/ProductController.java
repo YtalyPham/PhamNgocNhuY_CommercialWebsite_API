@@ -6,16 +6,12 @@
 package com.se.phone.controller;
 
 import com.se.phone.converter.PhoneConverter;
-import com.se.phone.dto.PhoneDTO;
-import com.se.phone.entity.Catagory;
-import com.se.phone.entity.Option;
-import com.se.phone.entity.Phone;
-import com.se.phone.entity.Producer;
+import com.se.phone.dto.ProductDTO;
+import com.se.phone.entity.Category;
+import com.se.phone.entity.ProductDetail;
+import com.se.phone.entity.Product;
+import com.se.phone.entity.Brand;
 import com.se.phone.exception.ApiRequestException;
-import com.se.phone.service.CatagoryService;
-import com.se.phone.service.OptionService;
-import com.se.phone.service.PhoneService;
-import com.se.phone.service.ProducerService;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
@@ -34,21 +30,25 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import com.se.phone.service.CategoryService;
+import com.se.phone.service.ProductService;
+import com.se.phone.service.ProductDetailService;
+import com.se.phone.service.BrandService;
 
 /**
  *
  * @author PhamNgocNhuY_18055121
  */
 @RestController
-public class PhoneController {
-    private PhoneService phoneService;
-    private OptionService optionService;
-    private CatagoryService catagoryService;
-    private ProducerService producerService;
+public class ProductController {
+    private ProductService phoneService;
+    private ProductDetailService optionService;
+    private CategoryService catagoryService;
+    private BrandService producerService;
     //private ModelMapper modelMapper;
     private PhoneConverter phoneConverter;
     @Autowired
-    public PhoneController(PhoneService phoneService, OptionService optionService, CatagoryService catagoryService, ProducerService producerService, PhoneConverter phoneConverter) {
+    public ProductController(ProductService phoneService, ProductDetailService optionService, CategoryService catagoryService, BrandService producerService, PhoneConverter phoneConverter) {
         this.phoneService = phoneService;
         this.optionService = optionService;
         this.catagoryService = catagoryService;
@@ -60,46 +60,46 @@ public class PhoneController {
     //http://localhost:8080/Ytalyphone/phone?sortBy=name
     @GetMapping("/phone")
      
-    public List<PhoneDTO> getPhones(
+    public List<ProductDTO> getPhones(
             @RequestParam Optional<Integer> page,
             @RequestParam Optional<String> sortBy){
-        //getContent() output list of Catagory or not output go Page<Catagory>
-        List<Phone> list= phoneService.getAllSort(page,sortBy).getContent();
+        //getContent() output list of Category or not output go Page<Catagory>
+        List<Product> list= phoneService.getAllSort(page,sortBy).getContent();
         return list.stream().map(phoneConverter::convertToDTO).collect(Collectors.toList()) ;
                 
     }
 
     //http://localhost:8080/Ytalyphone/phone/search/Xiaomi
      @GetMapping("/phone/searchByName/{name}") 
-    public List<PhoneDTO> searchByName(@PathVariable String name){
-        List<Phone> list= phoneService.getAllSearchByName(name.toLowerCase());
+    public List<ProductDTO> searchByName(@PathVariable String name){
+        List<Product> list= phoneService.getAllSearchByName(name.toLowerCase());
         return list.stream().map(phoneConverter::convertToDTO).collect(Collectors.toList());
     }
     
      @GetMapping("/phone/searchByProducer/{id}") 
-    public List<PhoneDTO> searchByProducer(@PathVariable int id){
-        List<Phone> list= phoneService.getAllSearchByProducer(id);
+    public List<ProductDTO> searchByProducer(@PathVariable int id){
+        List<Product> list= phoneService.getAllSearchByProducer(id);
         return list.stream().map(phoneConverter::convertToDTO).collect(Collectors.toList());
     }
     
      @GetMapping("/phone/searchByCatagory/{id}") 
-    public List<PhoneDTO> searchByCatagory(@PathVariable int id){
-        List<Phone> list= phoneService.getAllSearchByCatagory(id);
+    public List<ProductDTO> searchByCatagory(@PathVariable int id){
+        List<Product> list= phoneService.getAllSearchByCatagory(id);
         return list.stream().map(phoneConverter::convertToDTO).collect(Collectors.toList());
     }
     
     @GetMapping("/phone/{Id}")
-    public PhoneDTO getPhone(@PathVariable int Id){
-        Phone phone = phoneService.getById(Id);
-        PhoneDTO phoneDTO= phoneConverter.convertToDTO(phone);
+    public ProductDTO getPhone(@PathVariable int Id){
+        Product phone = phoneService.getById(Id);
+        ProductDTO phoneDTO= phoneConverter.convertToDTO(phone);
        
         return phoneDTO;
     }
     
     @PostMapping("/phone")
     @PreAuthorize("hasRole('PM') or hasRole('ADMIN')")
-    public PhoneDTO addPhone(@RequestBody PhoneDTO p){
-        List<Phone> list= phoneService.getAll();
+    public ProductDTO addPhone(@RequestBody ProductDTO p){
+        List<Product> list= phoneService.getAll();
         int temp=0;
         for (int i=0;i<list.size();i++) {
             if(list.get(i).getName().equalsIgnoreCase(p.getName())==true){
@@ -109,7 +109,7 @@ public class PhoneController {
             }
         }
         if(temp==0){
-            Phone phone= phoneConverter.convertToEntity(p);
+            Product phone= phoneConverter.convertToEntity(p);
             phoneService.save(phone);
             return p;
         }
@@ -118,8 +118,8 @@ public class PhoneController {
  
     @PutMapping("/phone")
     @PreAuthorize("hasRole('PM') or hasRole('ADMIN')")
-    public PhoneDTO updatePhone(@RequestBody PhoneDTO p){
-            Phone phone= phoneService.getById(p.getId());
+    public ProductDTO updatePhone(@RequestBody ProductDTO p){
+            Product phone= phoneService.getById(p.getId());
             phone.setName(p.getName());  
             phone.setPrice(p.getPrice());
             phone.setAmount(p.getAmount());  
@@ -128,13 +128,13 @@ public class PhoneController {
             phone.setDiscountPer(p.getDiscountPer());  
              
             ///////////////////////////////find and set by id for option catagory producer
-            Option o= optionService.getById(p.getOptionId());
-            Catagory c= catagoryService.getById(p.getCatagoryId());
-            Producer pr= producerService.getById(p.getProducerId());
+            ProductDetail o= optionService.getById(p.getProductDetailId());
+            Category c= catagoryService.getById(p.getCategoryId());
+            Brand pr= producerService.getById(p.getBrandId());
             if(o!=null&&c!=null&&pr!=null){
-                phone.setOption(o);  
-                phone.setCatagory(c);
-                phone.setProducer(pr);  
+                phone.setProductDetail(o);  
+                phone.setCategory(c);
+                phone.setBrand(pr);  
             }
             phoneService.save(phone);
             return phoneConverter.convertToDTO(phone);
@@ -142,10 +142,10 @@ public class PhoneController {
     }
     @PatchMapping("/phone/{id}")
     @PreAuthorize("hasRole('PM') or hasRole('ADMIN')")
-     public Phone patchPhone(@PathVariable int id,@RequestBody Map<Object,Object> p){
-            Phone phone= phoneService.getById(id);
+     public Product patchPhone(@PathVariable int id,@RequestBody Map<Object,Object> p){
+            Product phone= phoneService.getById(id);
             p.forEach((k,v)->{
-                Field field=ReflectionUtils.findField(Phone.class, (String) k);
+                Field field=ReflectionUtils.findField(Product.class, (String) k);
                 field.setAccessible(true);
                 ReflectionUtils.setField(field, phone, v);
             });
@@ -157,7 +157,7 @@ public class PhoneController {
     @DeleteMapping("/phone/{Id}")
     @PreAuthorize("hasRole('PM') or hasRole('ADMIN')")
     public String detetePhone(@PathVariable int Id){
-        Phone p= phoneService.getById(Id);
+        Product p= phoneService.getById(Id);
         phoneService.deleteById(Id);
         return "Delete sucess PhoneId= "+Id;
     }

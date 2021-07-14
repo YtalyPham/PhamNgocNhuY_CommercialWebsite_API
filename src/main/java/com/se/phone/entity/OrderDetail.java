@@ -44,12 +44,12 @@ public class OrderDetail {
     
     @ManyToOne
     @JoinColumn(name = "phone_fk")
-    private Phone phone; 
+    private Product phone; 
 
     public OrderDetail() {
     }
 
-    public OrderDetail(int id, String unit, int amount, Double totalPrice, Order order, Phone phone) {
+    public OrderDetail(int id, String unit, int amount, Double totalPrice, Order order, Product phone) {
         this.id = id;
         this.unit = unit;
         this.amount = amount;
@@ -98,11 +98,11 @@ public class OrderDetail {
         this.order = order;
     }
 
-    public Phone getPhone() {
+    public Product getPhone() {
         return phone;
     }
 
-    public void setPhone(Phone phone) {
+    public void setPhone(Product phone) {
         this.phone = phone;
     }
 

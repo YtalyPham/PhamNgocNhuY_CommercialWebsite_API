@@ -6,10 +6,8 @@
 package com.se.phone.service.impl;
 
  
-import com.se.phone.entity.Catagory;
+import com.se.phone.entity.Category;
 import com.se.phone.exception.ApiRequestException;
-import com.se.phone.reposity.CatagoryRepository;
-import com.se.phone.service.CatagoryService;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,21 +16,23 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
+import com.se.phone.reposity.CategoryRepository;
+import com.se.phone.service.CategoryService;
 
 /**
  *
  * @author PhamNgocNhuY_18055121
  */
 @Service
-public class CatagoryServiceImpl implements CatagoryService{
-    private CatagoryRepository catagoryRepository;
+public class CategoryServiceImpl implements CategoryService{
+    private CategoryRepository catagoryRepository;
     //private ModelMapper modelMapper;
     @Autowired
-    public CatagoryServiceImpl(CatagoryRepository catagoryRepository) {
+    public CategoryServiceImpl(CategoryRepository catagoryRepository) {
         this.catagoryRepository = catagoryRepository;
     }
     @Override
-    public Catagory save(Catagory c) {
+    public Category save(Category c) {
         return catagoryRepository.save(c);
     }
 
@@ -44,7 +44,7 @@ public class CatagoryServiceImpl implements CatagoryService{
     }
 
     @Override
-    public Page<Catagory> getAllSort(
+    public Page<Category> getAllSort(
             @RequestParam Optional<Integer> page,
             @RequestParam Optional<String> sortBy){
         return catagoryRepository.findAll(
@@ -57,9 +57,9 @@ public class CatagoryServiceImpl implements CatagoryService{
     }
 
     @Override
-    public Catagory getById(int id) {
-        Optional<Catagory> c= catagoryRepository.findById(id);
-        Catagory catagory= null;
+    public Category getById(int id) {
+        Optional<Category> c= catagoryRepository.findById(id);
+        Category catagory= null;
         if(c.isPresent()){
             catagory=c.get();
         }else{
@@ -69,25 +69,25 @@ public class CatagoryServiceImpl implements CatagoryService{
     }
 
     @Override
-    public List<Catagory> getAll() {
+    public List<Category> getAll() {
         return catagoryRepository.findAll();
     }
 
     @Override
-    public List<Catagory> getAllSearch(String keyword) {
+    public List<Category> getAllSearch(String keyword) {
         if (keyword != null) {
             return catagoryRepository.search(keyword);
         }
         return catagoryRepository.findAll();
     }
 //    //convert Entity to DTO
-//    public CatagoryDTO mapToDTO(Catagory catagory){
+//    public CatagoryDTO mapToDTO(Category catagory){
 //        CatagoryDTO catagoryDTO=modelMapper.map(catagory, CatagoryDTO.class);
 //        return catagoryDTO;
 //    }
 //    //convert DTO to Entity 
-//    public Catagory mapToEntity(CatagoryDTO catagoryDTO){
-//        Catagory catagory= modelMapper.map(catagoryDTO, Catagory.class);
+//    public Category mapToEntity(CatagoryDTO catagoryDTO){
+//        Category catagory= modelMapper.map(catagoryDTO, Category.class);
 //        return catagory;
 //    }
     

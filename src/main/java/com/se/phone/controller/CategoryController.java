@@ -5,9 +5,8 @@
  */
 package com.se.phone.controller;
 
-import com.se.phone.entity.Catagory;
+import com.se.phone.entity.Category;
 import com.se.phone.exception.ApiRequestException;
-import com.se.phone.service.CatagoryService;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +20,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import com.se.phone.service.CategoryService;
 
 /**
  *
@@ -28,42 +28,42 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @PreAuthorize("hasRole('PM') or hasRole('ADMIN')")
-public class CatagoryController {
+public class CategoryController {
     @Autowired
-    private CatagoryService catagoryService;
+    private CategoryService catagoryService;
 
-    public CatagoryController(CatagoryService catagoryService) {
+    public CategoryController(CategoryService catagoryService) {
         this.catagoryService = catagoryService;
     }
 
     //SORT
     //http://localhost:8080/Ytalyphone/catagory?sortBy=name
     @GetMapping("/catagory")
-    public List<Catagory> getCatagories(
+    public List<Category> getCatagories(
             @RequestParam Optional<Integer> page,
             @RequestParam Optional<String> sortBy){
-        //getContent() output list of Catagory or not output go Page<Catagory>
+        //getContent() output list of Category or not output go Page<Catagory>
         return catagoryService.getAllSort(page,sortBy).getContent();
                 
     }
 
     //http://localhost:8080/Ytalyphone/catagory/search/Tablet
      @GetMapping("/catagory/search/{name}")
-    public List<Catagory> searchByName(@PathVariable String name){
+    public List<Category> searchByName(@PathVariable String name){
         return catagoryService.getAllSearch(name.toLowerCase());
     }
     
     
     @GetMapping("/catagory/{Id}")
-    public Catagory getCatagory(@PathVariable int Id){
-        Catagory c = catagoryService.getById(Id);
+    public Category getCatagory(@PathVariable int Id){
+        Category c = catagoryService.getById(Id);
         return c;
     }
     
     @PostMapping("/catagory")
-    public Catagory addCatagory(@RequestBody Catagory c){
+    public Category addCatagory(@RequestBody Category c){
         int temp=0;
-        List<Catagory> l= catagoryService.getAll();
+        List<Category> l= catagoryService.getAll();
         for (int i=0;i<l.size();i++) {
             if (l.get(i).getName().equalsIgnoreCase(c.getName())==true) {
                 temp++;
@@ -78,8 +78,8 @@ public class CatagoryController {
     }
     
     @PutMapping("/catagory")
-    public Catagory updateCatagory(@RequestBody Catagory c){
-            Catagory catagory= catagoryService.getById(c.getId());
+    public Category updateCatagory(@RequestBody Category c){
+            Category catagory= catagoryService.getById(c.getId());
             catagory.setName(c.getName());    
             catagoryService.save(catagory);
             return catagory;
@@ -89,7 +89,7 @@ public class CatagoryController {
     
     @DeleteMapping("/catagory/{Id}")
     public String deteteCatagory(@PathVariable int Id){
-        Catagory c= catagoryService.getById(Id);
+        Category c= catagoryService.getById(Id);
         catagoryService.deleteById(Id);
         return "Delete sucess CatagoryId= "+Id;    
     }

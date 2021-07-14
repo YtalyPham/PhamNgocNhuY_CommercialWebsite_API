@@ -5,13 +5,9 @@
  */
 package com.se.phone.service.impl;
 
-import com.se.phone.entity.Phone;
-import com.se.phone.entity.Producer;
+import com.se.phone.entity.Product;
+import com.se.phone.entity.Brand;
 import com.se.phone.exception.ApiRequestException;
-import com.se.phone.reposity.CatagoryRepository;
-import com.se.phone.reposity.PhoneRepository;
-import com.se.phone.reposity.ProducerRepository;
-import com.se.phone.service.PhoneService;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,25 +16,29 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
+import com.se.phone.reposity.CategoryRepository;
+import com.se.phone.reposity.ProductRepository;
+import com.se.phone.service.ProductService;
+import com.se.phone.reposity.BrandRepository;
 
 /**
  *
  * @author PhamNgocNhuY_18055121
  */
 @Service
-public class PhoneServiceImpl implements PhoneService{
-    private PhoneRepository phoneRepository;
-    private CatagoryRepository catagoryRepository;
-    private ProducerRepository producerRepository;
+public class ProductServiceImpl implements ProductService{
+    private ProductRepository phoneRepository;
+    private CategoryRepository catagoryRepository;
+    private BrandRepository producerRepository;
     @Autowired
-     public PhoneServiceImpl(PhoneRepository phoneRepository, CatagoryRepository catagoryRepository, ProducerRepository producerRepository) {
+     public ProductServiceImpl(ProductRepository phoneRepository, CategoryRepository catagoryRepository, BrandRepository producerRepository) {
         this.phoneRepository = phoneRepository;
         this.catagoryRepository = catagoryRepository;
         this.producerRepository = producerRepository;
     }
     
     @Override
-    public Phone save(Phone c) {
+    public Product save(Product c) {
         return phoneRepository.save(c);
     }
 
@@ -49,7 +49,7 @@ public class PhoneServiceImpl implements PhoneService{
     }
 
     @Override
-    public Page<Phone> getAllSort(
+    public Page<Product> getAllSort(
             @RequestParam Optional<Integer> page,
             @RequestParam Optional<String> sortBy){
         return phoneRepository.findAll(
@@ -61,14 +61,14 @@ public class PhoneServiceImpl implements PhoneService{
         );
     }
     @Override
-    public List<Phone> getAll() {
+    public List<Product> getAll() {
         return phoneRepository.findAll();
     }
 
     @Override
-    public Phone getById(int id) {
-        Optional<Phone> p= phoneRepository.findById(id);
-        Phone phone= null;
+    public Product getById(int id) {
+        Optional<Product> p= phoneRepository.findById(id);
+        Product phone= null;
         if(p.isPresent()){
             phone=p.get();
         }else{
@@ -80,7 +80,7 @@ public class PhoneServiceImpl implements PhoneService{
     
 
     @Override
-    public List<Phone> getAllSearchByName(String keyword) {
+    public List<Product> getAllSearchByName(String keyword) {
         if (keyword != null) {
             return phoneRepository.search(keyword);
         }
@@ -88,7 +88,7 @@ public class PhoneServiceImpl implements PhoneService{
     }
 
     @Override
-    public List<Phone> getAllSearchByCatagory(int id) {
+    public List<Product> getAllSearchByCatagory(int id) {
          
         if (String.valueOf(id) != null) {
             return phoneRepository.searchByCatagory(id);
@@ -97,7 +97,7 @@ public class PhoneServiceImpl implements PhoneService{
     }
 
     @Override
-    public List<Phone> getAllSearchByProducer(int id) {
+    public List<Product> getAllSearchByProducer(int id) {
         if (String.valueOf(id) != null) {
             return phoneRepository.searchByProducer(id);
         }

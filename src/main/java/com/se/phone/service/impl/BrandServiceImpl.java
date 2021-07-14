@@ -6,10 +6,8 @@
 package com.se.phone.service.impl;
 
 
-import com.se.phone.entity.Producer;
+import com.se.phone.entity.Brand;
 import com.se.phone.exception.ApiRequestException;
-import com.se.phone.reposity.ProducerRepository;
-import com.se.phone.service.ProducerService;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,21 +16,23 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
+import com.se.phone.reposity.BrandRepository;
+import com.se.phone.service.BrandService;
 
 /**
  *
  * @author PhamNgocNhuY_18055121
  */
 @Service
-public class ProducerServiceImpl implements ProducerService{
-    private ProducerRepository producerRepository;
+public class BrandServiceImpl implements BrandService{
+    private BrandRepository producerRepository;
     @Autowired
-    public ProducerServiceImpl(ProducerRepository producerRepository) {
+    public BrandServiceImpl(BrandRepository producerRepository) {
         this.producerRepository = producerRepository;
     }
     
     @Override
-    public Producer save(Producer c) {
+    public Brand save(Brand c) {
         return producerRepository.save(c);
     }
 
@@ -42,7 +42,7 @@ public class ProducerServiceImpl implements ProducerService{
     }
 
     @Override
-    public Page<Producer> getAllSort(
+    public Page<Brand> getAllSort(
             @RequestParam Optional<Integer> page,
             @RequestParam Optional<String> sortBy){
         return producerRepository.findAll(
@@ -55,9 +55,9 @@ public class ProducerServiceImpl implements ProducerService{
     }
 
     @Override
-    public Producer getById(int id) {
-        Optional<Producer> p= producerRepository.findById(id);
-        Producer producer= null;
+    public Brand getById(int id) {
+        Optional<Brand> p= producerRepository.findById(id);
+        Brand producer= null;
         if(p.isPresent()){
             producer=p.get();
         }else{
@@ -67,12 +67,12 @@ public class ProducerServiceImpl implements ProducerService{
     }
 
     @Override
-    public List<Producer> getAll() {
+    public List<Brand> getAll() {
         return producerRepository.findAll();
     }
 
     @Override
-    public List<Producer> getAllSearch(String keyword) {
+    public List<Brand> getAllSearch(String keyword) {
         if (keyword != null) {
             return producerRepository.search(keyword);
         }

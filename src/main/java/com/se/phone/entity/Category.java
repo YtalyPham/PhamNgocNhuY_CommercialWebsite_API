@@ -5,20 +5,32 @@
  */
 package com.se.phone.entity;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  *
  * @author PhamNgocNhuY_18055121
  */
 @Entity
-@Table(name = "catagory")
-public class Catagory {
+@Table(name = "category")
+@Getter
+@Setter
+@NoArgsConstructor
+public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id")
@@ -27,46 +39,21 @@ public class Catagory {
     @Column(name="name")
     private String name;
 
-//    @OneToMany(mappedBy="catagory")
-//    private List<Phone> phones;
+    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
+    private List<Product> products = new ArrayList<>();
     
-    public Catagory() {
-    }
-
-    public Catagory(int id, String name) {
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "img_fk")
+    private Image img;
+    
+ 
+    public Category(int id, String name) {
         this.id = id;
         this.name = name;
     }
-
-    
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-//    public List<Phone> getPhones() {
-//        return phones;
-//    }
-//
-//    public void setPhones(List<Phone> phones) {
-//        this.phones = phones;
-//    }
-
     @Override
     public String toString() {
-        return "Catagory{" + "id=" + id + ", name=" + name + '}';
+        return "Category{" + "id=" + id + ", name=" + name + '}';
     }
 
     

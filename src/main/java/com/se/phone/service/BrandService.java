@@ -5,7 +5,7 @@
  */
 package com.se.phone.service;
 
-import com.se.phone.entity.Catagory;
+import com.se.phone.entity.Brand;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
@@ -15,12 +15,11 @@ import org.springframework.web.bind.annotation.RequestParam;
  *
  * @author PhamNgocNhuY_18055121
  */
-public interface CatagoryService {
-    public Catagory save(Catagory c);
+public interface BrandService {
+    public Brand save(Brand c);
     public void deleteById(int id);
-    public Page<Catagory> getAllSort(@RequestParam Optional<Integer> page,@RequestParam Optional<String> sortBy);
-    public List<Catagory> getAll();
-    public List<Catagory> getAllSearch(String keyword);
-    public Catagory getById(int id);
-    
+    public Page<Brand> getAllSort(@RequestParam Optional<Integer> page,@RequestParam Optional<String> sortBy);
+    public List<Brand> getAll();
+    public List<Brand> getAllSearch(String keyword);
+    public Brand getById(int id);
 }

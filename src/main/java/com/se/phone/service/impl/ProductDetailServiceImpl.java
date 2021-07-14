@@ -5,29 +5,29 @@
  */
 package com.se.phone.service.impl;
 
-import com.se.phone.entity.Option;
+import com.se.phone.entity.ProductDetail;
 import com.se.phone.exception.ApiRequestException;
-import com.se.phone.reposity.OptionRepository;
-import com.se.phone.service.OptionService;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.se.phone.reposity.ProductDetailRepository;
+import com.se.phone.service.ProductDetailService;
 
 /**
  *
  * @author PhamNgocNhuY_18055121
  */
 @Service
-public class OptionServiceImpl implements OptionService{
-    private OptionRepository optionRepository;
+public class ProductDetailServiceImpl implements ProductDetailService{
+    private ProductDetailRepository optionRepository;
     @Autowired
-    public OptionServiceImpl(OptionRepository optionRepository) {
+    public ProductDetailServiceImpl(ProductDetailRepository optionRepository) {
         this.optionRepository = optionRepository;
     }
     
    @Override
-    public Option save(Option c) {
+    public ProductDetail save(ProductDetail c) {
         return optionRepository.save(c);
     }
 
@@ -38,9 +38,9 @@ public class OptionServiceImpl implements OptionService{
 
      
     @Override
-    public Option getById(int id) {
-        Optional<Option> o= optionRepository.findById(id);
-        Option option= null;
+    public ProductDetail getById(int id) {
+        Optional<ProductDetail> o= optionRepository.findById(id);
+        ProductDetail option= null;
         if(o.isPresent()){
             option=o.get();
         }else{
@@ -50,7 +50,7 @@ public class OptionServiceImpl implements OptionService{
     }
 
     @Override
-    public List<Option> getAll() {
+    public List<ProductDetail> getAll() {
         return optionRepository.findAll();
     }
 

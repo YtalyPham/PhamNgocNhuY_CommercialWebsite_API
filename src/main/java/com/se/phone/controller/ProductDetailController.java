@@ -5,8 +5,7 @@
  */
 package com.se.phone.controller;
 
-import com.se.phone.entity.Option;
-import com.se.phone.service.OptionService;
+import com.se.phone.entity.ProductDetail;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
@@ -21,43 +20,44 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import com.se.phone.service.ProductDetailService;
 
 /**
  *
  * @author PhamNgocNhuY_18055121
  */
 @RestController
-public class OptionController {
-    private OptionService optionService;
+public class ProductDetailController {
+    private ProductDetailService optionService;
     @Autowired
-    public OptionController(OptionService optionService) {
+    public ProductDetailController(ProductDetailService optionService) {
         this.optionService = optionService;
     }
     
     @GetMapping("/option")
     //@PreAuthorize("hasRole('PM') or hasRole('ADMIN')")
-    public List<Option> getAllOption(){
+    public List<ProductDetail> getAllOption(){
         return optionService.getAll();
                 
     }
     @GetMapping("/option/{Id}")
     //@PreAuthorize("hasRole('PM') or hasRole('ADMIN')")
-    public Option getOption(@PathVariable int Id){
-        Option o = optionService.getById(Id);
+    public ProductDetail getOption(@PathVariable int Id){
+        ProductDetail o = optionService.getById(Id);
         return o;
     }
     
     @PostMapping("/option")
     @PreAuthorize("hasRole('PM') or hasRole('ADMIN')")
-    public Option addOption(@RequestBody Option o){
+    public ProductDetail addOption(@RequestBody ProductDetail o){
         optionService.save(o);
         return o;
     }
 
     @PutMapping("/option")
     @PreAuthorize("hasRole('PM') or hasRole('ADMIN')")
-    public Option updateOption(@RequestBody Option o){
-            Option option= optionService.getById(o.getId());
+    public ProductDetail updateOption(@RequestBody ProductDetail o){
+            ProductDetail option= optionService.getById(o.getId());
             option.setScreenSize(o.getScreenSize());  
             option.setScreenTechnology(o.getScreenTechnology());
             option.setCameraBack(o.getCameraBack());
@@ -74,10 +74,10 @@ public class OptionController {
     }
     @PatchMapping("/option/{id}")
     @PreAuthorize("hasRole('PM') or hasRole('ADMIN')")
-     public Option patchOption(@PathVariable int id,@RequestBody Map<Object,Object> p){
-            Option option= optionService.getById(id);
+     public ProductDetail patchOption(@PathVariable int id,@RequestBody Map<Object,Object> p){
+            ProductDetail option= optionService.getById(id);
             p.forEach((k,v)->{
-                Field field=ReflectionUtils.findField(Option.class, (String) k);
+                Field field=ReflectionUtils.findField(ProductDetail.class, (String) k);
                 field.setAccessible(true);
                 ReflectionUtils.setField(field, option, v);
             });
@@ -89,7 +89,7 @@ public class OptionController {
     @DeleteMapping("/option/{Id}")
     @PreAuthorize("hasRole('PM') or hasRole('ADMIN')")
     public String deteteOption(@PathVariable int Id){
-        Option o= optionService.getById(Id);
+        ProductDetail o= optionService.getById(Id);
         optionService.deleteById(Id);
         return "Delete sucess OptionId= "+Id;
      
