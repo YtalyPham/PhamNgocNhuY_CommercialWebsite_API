@@ -10,20 +10,26 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 /**
  *
  * @author PhamNgocNhuY_18055121
  */
 @Entity
-@Table(name = "productDetail")
+@Table(name = "ProductDetail" ,
+       indexes = {
+            @Index(name = "productdetail_name_index" , columnList = "id , RAM")
+ })
 @Getter
 @Setter
 @NoArgsConstructor
+@ToString
 public class ProductDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -107,8 +113,5 @@ public class ProductDetail {
         this.bluetooth = bluetooth;
     }
 
-    @Override
-    public String toString() {
-        return "Option{" + "id=" + id + ", screenSize=" + screenSize + ", screenTechnology=" + screenTechnology + ", cameraBack=" + cameraBack + ", cameraFont=" + cameraFont + ", chipset=" + chipset + ", RAM=" + RAM + ", memory=" + memory + ", battery=" + battery + ", SIM=" + SIM + ", system=" + system + ", screenResolution=" + screenResolution + ", size=" + size + ", weight=" + weight + ", chargingTechnology=" + chargingTechnology + ", chargingPort=" + chargingPort + ", sensors=" + sensors + ", wiFi=" + wiFi + ", bluetooth=" + bluetooth + '}';
-    }   
+     
 }

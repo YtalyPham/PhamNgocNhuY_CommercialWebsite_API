@@ -27,7 +27,7 @@ import com.se.phone.reposity.BrandRepository;
  * @author PhamNgocNhuY_18055121
  */
 @Component
-public class PhoneConverter {
+public class ProductConverter {
     private ModelMapper modelMapper;
     private CategoryRepository catagoryRepository;
     private BrandRepository producerRepository;
@@ -35,7 +35,7 @@ public class PhoneConverter {
     private ImageRepository imageRepository;
     
   @Autowired
-    public PhoneConverter(ModelMapper modelMapper, CategoryRepository catagoryRepository, BrandRepository producerRepository, ProductDetailRepository optionRepository, ImageRepository imageRepository) {
+    public ProductConverter(ModelMapper modelMapper, CategoryRepository catagoryRepository, BrandRepository producerRepository, ProductDetailRepository optionRepository, ImageRepository imageRepository) {
         this.modelMapper = modelMapper;
         this.catagoryRepository = catagoryRepository;
         this.producerRepository = producerRepository;
@@ -43,7 +43,7 @@ public class PhoneConverter {
         this.imageRepository = imageRepository;
     }
 
-    public PhoneConverter() {
+    public ProductConverter() {
     }
 
     //converToEntity
@@ -53,16 +53,23 @@ public class PhoneConverter {
             Category category= catagoryRepository.getById(dto.getCategoryId());
             Brand brand= producerRepository.getById(dto.getBrandId());
             ProductDetail productDetail= optionRepository.getById(dto.getProductDetailId());
-            Image image= imageRepository.findById(dto.getImagesId()).get();
-//            List<Image> list= new ArrayList<>();
-//            List<String> temp= dto.getImagesId();
-//            for (String a : temp) {
-//                list.add(imageRepository.findById(a).get());
-//            }
+            //Image image= imageRepository.findById(dto.getImagesId()).get();
+            List<Image> list= new ArrayList<>();
+            List<String> temp= dto.getImagesId();
+            if(temp!=null){
+               for (String a : temp) {
+                list.add(imageRepository.findById(a).get());
+                }
+               phone.setImages(list);
+            }
+            else{
+                phone.setImages(list);
+            }
+            
             phone.setCategory(category);
             phone.setBrand(brand);
             phone.setProductDetail(productDetail);
-            phone.setImg(image);
+            
             return phone;
             
         } catch (Exception e) {
@@ -73,12 +80,12 @@ public class PhoneConverter {
     public ProductDTO convertToDTO(Product phone){
         try {
             ProductDTO phoneDTO=modelMapper.map(phone,ProductDTO.class);
-            String temp= phone.getImg().getId();
-//            List<Image> list= phone.getImages();
-//            List<String> temp= new ArrayList<>();
-//            for (Image a : list) {
-//                temp.add(a.getId());
-//            }
+            //String temp= phone.getImg().getId();
+            List<Image> list= phone.getImages();
+            List<String> temp= new ArrayList<>();
+            for (Image a : list) {
+                temp.add(a.getId());
+            }
             phoneDTO.setCategoryId(phone.getCategory().getId());
             phoneDTO.setBrandId(phone.getBrand().getId());
             phoneDTO.setProductDetailId(phone.getProductDetail().getId());

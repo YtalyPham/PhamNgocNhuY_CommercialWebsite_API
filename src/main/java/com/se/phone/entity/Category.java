@@ -13,6 +13,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -26,7 +27,10 @@ import lombok.Setter;
  * @author PhamNgocNhuY_18055121
  */
 @Entity
-@Table(name = "category")
+@Table(name = "category",
+       indexes = {
+            @Index(name = "category_name_index" , columnList = "id , name")
+})
 @Getter
 @Setter
 @NoArgsConstructor
@@ -40,10 +44,10 @@ public class Category {
     private String name;
 
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
-    private List<Product> products = new ArrayList<>();
+    private List<Product> products;
     
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "img_fk")
+    @JoinColumn(name = "img_id")
     private Image img;
     
  

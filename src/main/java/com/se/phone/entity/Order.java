@@ -12,6 +12,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
@@ -26,16 +27,18 @@ import lombok.Setter;
  * @author PhamNgocNhuY_18055121
  */
 @Entity
-@Table(name = "orders")
+@Table(name = "orders",indexes = {
+            @Index(name = "orders_name_index" , columnList = "id , discountPer")
+})
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Order {
     @Id
-    @Column(name = "orderid")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int orderid;
+    @Column(name = "id")
+    private int id;
     
     @Column(name = "discountPer")
     private Double discountPer;
@@ -56,8 +59,10 @@ public class Order {
 
     @Override
     public String toString() {
-        return "Order{" + "orderid=" + orderid + ", discountPer=" + discountPer + ", VAT=" + VAT + ", date=" + date + ", user=" + user + ", orderDetail=" + orderDetail + '}';
+        return "Order{" + "id=" + id + ", discountPer=" + discountPer + ", VAT=" + VAT + ", date=" + date + ", user=" + user + ", orderDetail=" + orderDetail + '}';
     }
+
+    
     
     
 }

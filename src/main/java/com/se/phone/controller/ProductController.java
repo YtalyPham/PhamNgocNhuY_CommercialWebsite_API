@@ -5,7 +5,7 @@
  */
 package com.se.phone.controller;
 
-import com.se.phone.converter.PhoneConverter;
+import com.se.phone.converter.ProductConverter;
 import com.se.phone.dto.ProductDTO;
 import com.se.phone.entity.Category;
 import com.se.phone.entity.ProductDetail;
@@ -46,9 +46,9 @@ public class ProductController {
     private CategoryService catagoryService;
     private BrandService producerService;
     //private ModelMapper modelMapper;
-    private PhoneConverter phoneConverter;
+    private ProductConverter phoneConverter;
     @Autowired
-    public ProductController(ProductService phoneService, ProductDetailService optionService, CategoryService catagoryService, BrandService producerService, PhoneConverter phoneConverter) {
+    public ProductController(ProductService phoneService, ProductDetailService optionService, CategoryService catagoryService, BrandService producerService, ProductConverter phoneConverter) {
         this.phoneService = phoneService;
         this.optionService = optionService;
         this.catagoryService = catagoryService;
@@ -111,7 +111,7 @@ public class ProductController {
         if(temp==0){
             Product phone= phoneConverter.convertToEntity(p);
             phoneService.save(phone);
-            return p;
+            return p;//khong lay dc id
         }
         return null; 
     }

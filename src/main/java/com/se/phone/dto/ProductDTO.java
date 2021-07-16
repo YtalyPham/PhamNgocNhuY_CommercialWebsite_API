@@ -30,7 +30,7 @@ public class ProductDTO {
     private int productDetailId;
     private int categoryId;
     private int brandId;
-    private String imagesId;
+    private List<String> imagesId;
 
     @Override
     public String toString() {

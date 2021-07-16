@@ -6,6 +6,7 @@
 package com.se.phone.service.impl;
 
  
+import com.se.phone.controller.CategoryController;
 import com.se.phone.entity.Category;
 import com.se.phone.exception.ApiRequestException;
 import java.util.List;
@@ -18,6 +19,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 import com.se.phone.reposity.CategoryRepository;
 import com.se.phone.service.CategoryService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -25,6 +28,9 @@ import com.se.phone.service.CategoryService;
  */
 @Service
 public class CategoryServiceImpl implements CategoryService{
+    
+    private static final Logger LOGGER = LoggerFactory.getLogger(CategoryService.class);
+    
     private CategoryRepository catagoryRepository;
     //private ModelMapper modelMapper;
     @Autowired
@@ -62,7 +68,9 @@ public class CategoryServiceImpl implements CategoryService{
         Category catagory= null;
         if(c.isPresent()){
             catagory=c.get();
+            LOGGER.info("Found category" + c.get().getName());
         }else{
+            LOGGER.info("Not found category" + c.get().getName());
             throw new ApiRequestException("Did not find Id "+ id);
         }
         return catagory;

@@ -5,16 +5,19 @@
  */
 package com.se.phone.entity;
 
+import java.sql.Timestamp;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.MapsId;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -24,43 +27,36 @@ import lombok.Setter;
  * @author PhamNgocNhuY_18055121
  */
 @Entity
-@Table(name = "brand",
+@Table(name = "Cart" ,
        indexes = {
-            @Index(name = "brand_name_index" , columnList = "id , name")
-       })
+            @Index(name = "card_name_index" , columnList = "id , createDate")
+ })
 @Getter
 @Setter
 @NoArgsConstructor
-public class Brand {
+@AllArgsConstructor
+public class Cart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="id")
     private int id;
+     
+    @Column(name = "createDate")
+    private Timestamp createDate;
     
-    @Column(name="name")
-    private String name;
+    @Column(name = "updateDate")
+    private Timestamp updateDate;
     
-    @Column(name="country")
-    private String country;
+    @OneToOne  
+    @JoinColumn(name = "user_id")  
+    private User user; 
     
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "img_id")
-    private Image img;
-  
-    public Brand(int id, String name, String country) {
-        this.id = id;
-        this.name = name;
-        this.country = country;
-    }
-    
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "cartItem_id", referencedColumnName = "id")
+    private CartItem cartItem;
+
     @Override
     public String toString() {
-        return "Producer{" + "id=" + id + ", name=" + name + ", country=" + country + '}';
+        return "CartItem{" + "id=" + id + ", createDate=" + createDate + ", updateDate=" + updateDate + '}';
     }
-
-   
-    
-    
-    
-    
+     
 }

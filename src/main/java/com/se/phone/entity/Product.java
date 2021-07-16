@@ -6,23 +6,17 @@
 package com.se.phone.entity;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.Lob;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -34,7 +28,10 @@ import lombok.Setter;
  * @author PhamNgocNhuY_18055121
  */
 @Entity
-@Table(name = "product")
+@Table(name = "Product" ,
+       indexes = {
+            @Index(name = "product_name_index" , columnList = "id , name")
+ })
 @Getter
 @Setter
 @NoArgsConstructor
@@ -63,21 +60,20 @@ public class Product {
     @Column(name = "rating")
     private double rating;
     
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "option_fk", referencedColumnName = "id")
+    @ManyToOne
+    @JoinColumn(name = "productDetail_id")
     private ProductDetail productDetail;
     
    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_fk")
+    @JoinColumn(name = "category_id")
    private Category category;
    
    @ManyToOne
-   @JoinColumn(name = "brand_fk")
+   @JoinColumn(name = "brand_id")
    private Brand brand;
    
-  @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "img_fk")
-    private Image img;
+   @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
+   private List<Image> images;
   
 //   @OneToMany(mappedBy="phone")
 //   private List<OrderDetail> orderDetails;

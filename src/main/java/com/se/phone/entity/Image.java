@@ -6,10 +6,18 @@
 package com.se.phone.entity;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Index;
+import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.annotations.GenericGenerator;
 
 /**
@@ -17,7 +25,16 @@ import org.hibernate.annotations.GenericGenerator;
  * @author PhamNgocNhuY_18055121
  */
 @Entity
-@Table(name = "Image")
+@Table(name = "Image" ,
+       indexes = {
+            @Index(name = "image_name_index" , columnList = "id , name")
+       }
+)
+
+@Getter
+@Setter
+@ToString
+@AllArgsConstructor
 public class Image {
   @Id
   @GeneratedValue(generator = "uuid")
@@ -31,6 +48,10 @@ public class Image {
   @Lob
   private byte[] data;
 
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "product_id")
+  private Product product;
+  
   public Image() {
   }
 
@@ -40,32 +61,5 @@ public class Image {
     this.data = data;
   }
 
-  public String getId() {
-    return id;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  public String getType() {
-    return type;
-  }
-
-  public void setType(String type) {
-    this.type = type;
-  }
-
-  public byte[] getData() {
-    return data;
-  }
-
-  public void setData(byte[] data) {
-    this.data = data;
-  }
 
 }

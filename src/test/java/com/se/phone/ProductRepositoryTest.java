@@ -3,14 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.se.phone.responseEntity;
+package com.se.phone;
 
 /**
  *
  * @author PhamNgocNhuY_18055121
  */
-public class ResponseEntity {
-    private String errorCode;
-    private Object data;
-    private String successCode;
+public class ProductRepositoryTest {
+    
 }

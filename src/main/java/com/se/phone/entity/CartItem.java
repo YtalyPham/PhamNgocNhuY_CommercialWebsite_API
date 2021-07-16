@@ -7,14 +7,13 @@ package com.se.phone.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Index;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -24,41 +23,39 @@ import lombok.Setter;
  * @author PhamNgocNhuY_18055121
  */
 @Entity
-@Table(name = "brand",
+@Table(name = "CartItem" ,
        indexes = {
-            @Index(name = "brand_name_index" , columnList = "id , name")
-       })
+            @Index(name = "cartitem_name_index" , columnList = "id , unit")
+ })
 @Getter
 @Setter
 @NoArgsConstructor
-public class Brand {
+@AllArgsConstructor
+public class CartItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="id")
     private int id;
     
-    @Column(name="name")
-    private String name;
+     @Column(name = "unit")
+    private String unit;
     
-    @Column(name="country")
-    private String country;
+    @Column(name = "amount")
+    private int amount;
     
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "img_id")
-    private Image img;
-  
-    public Brand(int id, String name, String country) {
-        this.id = id;
-        this.name = name;
-        this.country = country;
-    }
+    @Column(name = "totalPrice")
+    private Double totalPrice;
     
+     @Column(name = "price")
+    private Double price;
+    
+    @OneToOne(mappedBy = "cartItem")
+    private Cart card;
+
     @Override
     public String toString() {
-        return "Producer{" + "id=" + id + ", name=" + name + ", country=" + country + '}';
+        return "CartItem{" + "id=" + id + ", unit=" + unit + ", amount=" + amount + ", totalPrice=" + totalPrice + ", price=" + price + ", card=" + card + '}';
     }
 
-   
     
     
     

@@ -3,16 +3,22 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.se.phone.serviceImplTest;
+package com.se.phone.service;
 
 import com.se.phone.entity.ProductDetail;
+import com.se.phone.exception.ApiRequestException;
 import com.se.phone.reposity.ProductDetailRepository;
 import com.se.phone.reposity.ProductDetailRepository;
 import com.se.phone.service.ProductDetailService;
 import com.se.phone.service.ProductDetailService;
 import io.jsonwebtoken.lang.Assert;
 import java.util.List;
+import org.junit.experimental.categories.Categories;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,13 +32,33 @@ import org.springframework.test.context.junit4.SpringRunner;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class ProductDetailServiceImplTest {
-    @Autowired
-	private ProductDetailService productDetailService;
         @Autowired
-	private ProductDetailRepository productDetailRepository;
+            private ProductDetailService productDetailService;
+        @Autowired
+            private ProductDetailRepository productDetailRepository;
+        @BeforeAll
+	public static void setUp() {
+		System.out.println("Start Test");
+	}
+
+	@BeforeEach
+	public void beforeEach() {
+		
+		System.out.println("Before each testcase");
+	}
+
+	@AfterEach
+	public void afterEach() {
+		System.out.println("After each testcase");
+	}
+
+	@AfterAll
+	public static void tearDown() {
+		System.out.println("End Test");
+	}
 
 	@Test
-	public void GetCatagoryById() {
+	public void GetProductDetailById() {
              ProductDetail c=productDetailService.getById(1);
               
              Assert.notNull(c);
@@ -71,7 +97,16 @@ public class ProductDetailServiceImplTest {
             
             Assert.notNull(productDetailService.save(productDetail));
         }
-        
+        @Test void getIdNotFound(){
+            ApiRequestException ex=null;
+            try {
+                ProductDetail temp=productDetailService.getById(10);
+            } catch (ApiRequestException e) {
+                ex=e;
+            }
+            
+            Assert.notNull(ex);
+        }
 //        @Test
 //        public void DeleteProductDetail(){
 //
