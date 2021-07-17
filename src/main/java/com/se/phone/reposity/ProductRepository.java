@@ -21,9 +21,9 @@ public interface ProductRepository extends JpaRepository<Product, Integer>{
     @Query("SELECT p FROM Product p WHERE LOWER(p.name) LIKE %:name%")
     List<Product> search(@Param("name") String name);
     
-    @Query("SELECT p FROM Product p WHERE catagory_fk = :catagory_id")
-    List<Product> searchByCatagory(@Param("catagory_id") int id);
+    @Query("SELECT p FROM Product p WHERE category_id = :id")
+    List<Product> searchByCategory(@Param("id") int id);
     
-    @Query("SELECT p FROM Product p WHERE producer_fk = :producer_id")
-    List<Product> searchByProducer(@Param("producer_id") int id);
+    @Query("SELECT p FROM Product p WHERE brand_id = :id")
+    List<Product> searchByBrand(@Param("id") int id);
 }

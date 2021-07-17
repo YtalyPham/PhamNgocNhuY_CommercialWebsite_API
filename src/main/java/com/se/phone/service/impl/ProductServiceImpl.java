@@ -88,18 +88,18 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
-    public List<Product> getAllSearchByCatagory(int id) {
+    public List<Product> getAllSearchByCategory(int id) {
          
         if (String.valueOf(id) != null) {
-            return phoneRepository.searchByCatagory(id);
+            return phoneRepository.searchByCategory(id);
         }
         return phoneRepository.findAll();
     }
 
     @Override
-    public List<Product> getAllSearchByProducer(int id) {
+    public List<Product> getAllSearchByBrand(int id) {
         if (String.valueOf(id) != null) {
-            return phoneRepository.searchByProducer(id);
+            return phoneRepository.searchByBrand(id);
         }
         return phoneRepository.findAll();
     }

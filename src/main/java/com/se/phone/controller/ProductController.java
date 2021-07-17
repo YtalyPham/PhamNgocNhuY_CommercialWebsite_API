@@ -7,11 +7,13 @@ package com.se.phone.controller;
 
 import com.se.phone.converter.ProductConverter;
 import com.se.phone.dto.ProductDTO;
+import com.se.phone.dto.ResponseDTO;
 import com.se.phone.entity.Category;
 import com.se.phone.entity.ProductDetail;
 import com.se.phone.entity.Product;
 import com.se.phone.entity.Brand;
 import com.se.phone.exception.ApiRequestException;
+import com.se.phone.exception.DataNotFoundException;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +36,7 @@ import com.se.phone.service.CategoryService;
 import com.se.phone.service.ProductService;
 import com.se.phone.service.ProductDetailService;
 import com.se.phone.service.BrandService;
+import org.springframework.http.ResponseEntity;
 
 /**
  *
@@ -57,48 +60,58 @@ public class ProductController {
     }
     
     //SORT
-    //http://localhost:8080/Ytalyphone/phone?sortBy=name
-    @GetMapping("/phone")
+    //http://localhost:8080/Ytalyphone/product?sortBy=name
+    @GetMapping("/product")
      
-    public List<ProductDTO> getPhones(
+    public ResponseEntity<ResponseDTO> getPhones(
             @RequestParam Optional<Integer> page,
-            @RequestParam Optional<String> sortBy){
+            @RequestParam Optional<String> sortBy)throws DataNotFoundException{
         //getContent() output list of Category or not output go Page<Catagory>
+        ResponseDTO response = new ResponseDTO(); 
         List<Product> list= phoneService.getAllSort(page,sortBy).getContent();
-        return list.stream().map(phoneConverter::convertToDTO).collect(Collectors.toList()) ;
+        response.setData(list.stream().map(phoneConverter::convertToDTO).collect(Collectors.toList()));
+        return ResponseEntity.ok().body(response);
                 
     }
 
     //http://localhost:8080/Ytalyphone/phone/search/Xiaomi
-     @GetMapping("/phone/searchByName/{name}") 
-    public List<ProductDTO> searchByName(@PathVariable String name){
+     @GetMapping("/product/searchByName/{name}") 
+    public ResponseEntity<ResponseDTO> searchByName(@PathVariable String name)throws DataNotFoundException{
+        ResponseDTO response = new ResponseDTO();
         List<Product> list= phoneService.getAllSearchByName(name.toLowerCase());
-        return list.stream().map(phoneConverter::convertToDTO).collect(Collectors.toList());
+        response.setData(list.stream().map(phoneConverter::convertToDTO).collect(Collectors.toList()));
+        return ResponseEntity.ok().body(response);
     }
     
-     @GetMapping("/phone/searchByProducer/{id}") 
-    public List<ProductDTO> searchByProducer(@PathVariable int id){
-        List<Product> list= phoneService.getAllSearchByProducer(id);
-        return list.stream().map(phoneConverter::convertToDTO).collect(Collectors.toList());
+     @GetMapping("/product/searchByProducer/{id}") 
+    public ResponseEntity<ResponseDTO> searchByBrand(@PathVariable int id)throws DataNotFoundException{
+        ResponseDTO response = new ResponseDTO();
+        List<Product> list= phoneService.getAllSearchByBrand(id);
+        response.setData(list.stream().map(phoneConverter::convertToDTO).collect(Collectors.toList()));
+        return ResponseEntity.ok().body(response);
     }
     
-     @GetMapping("/phone/searchByCatagory/{id}") 
-    public List<ProductDTO> searchByCatagory(@PathVariable int id){
-        List<Product> list= phoneService.getAllSearchByCatagory(id);
-        return list.stream().map(phoneConverter::convertToDTO).collect(Collectors.toList());
+     @GetMapping("/product/searchByCatagory/{id}") 
+    public ResponseEntity<ResponseDTO> searchByCategory(@PathVariable int id)throws DataNotFoundException{
+        ResponseDTO response = new ResponseDTO();
+        List<Product> list= phoneService.getAllSearchByCategory(id);
+        response.setData(list.stream().map(phoneConverter::convertToDTO).collect(Collectors.toList()));
+        return ResponseEntity.ok().body(response);
     }
     
-    @GetMapping("/phone/{Id}")
-    public ProductDTO getPhone(@PathVariable int Id){
+    @GetMapping("/product/{Id}")
+    public ResponseEntity<ResponseDTO> getPhone(@PathVariable int Id)throws DataNotFoundException{
+        ResponseDTO response = new ResponseDTO();
         Product phone = phoneService.getById(Id);
         ProductDTO phoneDTO= phoneConverter.convertToDTO(phone);
-       
-        return phoneDTO;
+        response.setData(phoneDTO);
+        return ResponseEntity.ok().body(response);
     }
     
-    @PostMapping("/phone")
+    @PostMapping("/product")
     @PreAuthorize("hasRole('PM') or hasRole('ADMIN')")
-    public ProductDTO addPhone(@RequestBody ProductDTO p){
+    public ResponseEntity<ResponseDTO> addPhone(@RequestBody ProductDTO p)throws DataNotFoundException{
+        ResponseDTO response = new ResponseDTO();
         List<Product> list= phoneService.getAll();
         int temp=0;
         for (int i=0;i<list.size();i++) {
@@ -111,14 +124,15 @@ public class ProductController {
         if(temp==0){
             Product phone= phoneConverter.convertToEntity(p);
             phoneService.save(phone);
-            return p;//khong lay dc id
+            response.setData(p);
+            return ResponseEntity.ok().body(response);
         }
         return null; 
     }
  
-    @PutMapping("/phone")
+    @PutMapping("/product")
     @PreAuthorize("hasRole('PM') or hasRole('ADMIN')")
-    public ProductDTO updatePhone(@RequestBody ProductDTO p){
+    public ResponseEntity<ResponseDTO> updatePhone(@RequestBody ProductDTO p)throws DataNotFoundException{
             Product phone= phoneService.getById(p.getId());
             phone.setName(p.getName());  
             phone.setPrice(p.getPrice());
@@ -137,10 +151,12 @@ public class ProductController {
                 phone.setBrand(pr);  
             }
             phoneService.save(phone);
-            return phoneConverter.convertToDTO(phone);
+            ResponseDTO response = new ResponseDTO();
+            response.setData(phoneConverter.convertToDTO(phone));
+            return ResponseEntity.ok().body(response);
           
     }
-    @PatchMapping("/phone/{id}")
+    @PatchMapping("/product/{id}")
     @PreAuthorize("hasRole('PM') or hasRole('ADMIN')")
      public Product patchPhone(@PathVariable int id,@RequestBody Map<Object,Object> p){
             Product phone= phoneService.getById(id);
@@ -154,12 +170,15 @@ public class ProductController {
           
     }
     
-    @DeleteMapping("/phone/{Id}")
+    @DeleteMapping("/product/{Id}")
     @PreAuthorize("hasRole('PM') or hasRole('ADMIN')")
-    public String detetePhone(@PathVariable int Id){
+    public ResponseEntity<ResponseDTO> detetePhone(@PathVariable int Id)throws DataNotFoundException{
+        ResponseDTO response = new ResponseDTO(); 
         Product p= phoneService.getById(Id);
         phoneService.deleteById(Id);
-        return "Delete sucess PhoneId= "+Id;
+        String temp="Delete success id"+Id;
+        response.setData(temp);
+        return ResponseEntity.ok().body(response);
     }
  
 }

@@ -5,8 +5,9 @@
  */
 package com.se.phone;
 
+import com.se.phone.entity.Brand;
 import com.se.phone.entity.Product;
-import com.se.phone.reposity.ProductRepository;
+import com.se.phone.reposity.BrandRepository;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -20,14 +21,15 @@ import org.springframework.test.context.junit4.SpringRunner;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class ProductRepositoryTest {
+public class BrandRepositoryTest {
     @Autowired
-    ProductRepository productRepository;
+    BrandRepository brandRepository;
     
     @Test
-    public void testCreateNewProductSuccess(){
-        Product product = new Product();
-        product.setName("Iphone 10");
-        assertNotNull(productRepository.save(product));
+    public void testCreateNewBrandSuccess(){
+        Brand brand = new Brand();
+        brand.setName("Nasaaa2");
+        brand.setCountry("Japan");
+        assertNotNull(brandRepository.save(brand));
     }
 }

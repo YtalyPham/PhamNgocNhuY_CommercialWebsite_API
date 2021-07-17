@@ -22,7 +22,7 @@ public interface ProductService {
     public Page<Product> getAllSort(@RequestParam Optional<Integer> page,@RequestParam Optional<String> sortBy);
     public List<Product> getAll();
     public List<Product> getAllSearchByName(String keyword);
-    public List<Product> getAllSearchByCatagory(int id);
-    public List<Product> getAllSearchByProducer(int id);
+    public List<Product> getAllSearchByCategory(int id);
+    public List<Product> getAllSearchByBrand(int id);
     public Product getById(int id);
 }

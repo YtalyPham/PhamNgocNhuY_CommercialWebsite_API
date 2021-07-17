@@ -39,6 +39,7 @@ public class CategoryConverter {
     public Category convertToEntity(CategoryDTO dto){
         try {
             Category category= modelMapper.map(dto,Category.class);
+           // category.setImg(imageRepository.findById(dto.getImgId()).get());
              List<Product> list= new ArrayList<>();
             List<String> temp= dto.getProductId();
             if(temp!=null){
@@ -65,6 +66,7 @@ public class CategoryConverter {
                 temp.add(String.valueOf(a.getId()));
             }
             categoryDTO.setProductId(temp);
+          //  categoryDTO.setImgId(category.getImg().getId());
             return categoryDTO;
         } catch (Exception e) {
             throw new ApiRequestException("Can't convert to DTO",e);
