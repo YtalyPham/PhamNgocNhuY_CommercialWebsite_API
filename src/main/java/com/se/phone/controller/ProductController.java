@@ -62,7 +62,6 @@ public class ProductController {
     //SORT
     //http://localhost:8080/Ytalyphone/product?sortBy=name
     @GetMapping("/product")
-     
     public ResponseEntity<ResponseDTO> getPhones(
             @RequestParam Optional<Integer> page,
             @RequestParam Optional<String> sortBy)throws DataNotFoundException{

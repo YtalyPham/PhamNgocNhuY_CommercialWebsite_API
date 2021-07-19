@@ -55,7 +55,7 @@ public class ProductServiceImpl implements ProductService{
         return phoneRepository.findAll(
                 PageRequest.of(
                     page.orElse(0),
-                    25,
+                    20,
                     Sort.Direction.ASC,sortBy.orElse("id")
                 )
         );
