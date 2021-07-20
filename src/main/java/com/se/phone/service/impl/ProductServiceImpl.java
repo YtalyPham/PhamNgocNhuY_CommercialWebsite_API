@@ -8,6 +8,7 @@ package com.se.phone.service.impl;
 import com.se.phone.entity.Product;
 import com.se.phone.entity.Brand;
 import com.se.phone.exception.ApiRequestException;
+import com.se.phone.exception.DataNotFoundException;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,32 +28,32 @@ import com.se.phone.reposity.BrandRepository;
  */
 @Service
 public class ProductServiceImpl implements ProductService{
-    private ProductRepository phoneRepository;
-    private CategoryRepository catagoryRepository;
-    private BrandRepository producerRepository;
+    private ProductRepository productRepository;
+    private CategoryRepository categoryRepository;
+    private BrandRepository brandRepository;
     @Autowired
-     public ProductServiceImpl(ProductRepository phoneRepository, CategoryRepository catagoryRepository, BrandRepository producerRepository) {
-        this.phoneRepository = phoneRepository;
-        this.catagoryRepository = catagoryRepository;
-        this.producerRepository = producerRepository;
+     public ProductServiceImpl(ProductRepository productRepository, CategoryRepository categoryRepository, BrandRepository brandRepository) {
+        this.productRepository = productRepository;
+        this.categoryRepository = categoryRepository;
+        this.brandRepository = brandRepository;
     }
     
     @Override
     public Product save(Product c) {
-        return phoneRepository.save(c);
+        return productRepository.save(c);
     }
 
    
     @Override
     public void deleteById(int id) {
-        phoneRepository.deleteById(id);
+        productRepository.deleteById(id);
     }
 
     @Override
     public Page<Product> getAllSort(
             @RequestParam Optional<Integer> page,
             @RequestParam Optional<String> sortBy){
-        return phoneRepository.findAll(
+        return productRepository.findAll(
                 PageRequest.of(
                     page.orElse(0),
                     20,
@@ -62,17 +63,17 @@ public class ProductServiceImpl implements ProductService{
     }
     @Override
     public List<Product> getAll() {
-        return phoneRepository.findAll();
+        return productRepository.findAll();
     }
 
     @Override
     public Product getById(int id) {
-        Optional<Product> p= phoneRepository.findById(id);
+        Optional<Product> p= productRepository.findById(id);
         Product phone= null;
         if(p.isPresent()){
             phone=p.get();
         }else{
-            throw new ApiRequestException("Did not find Id "+ id);
+           // throw new ApiRequestException("Did not find Id "+ id);
         }
         return phone;
     }
@@ -82,26 +83,31 @@ public class ProductServiceImpl implements ProductService{
     @Override
     public List<Product> getAllSearchByName(String keyword) {
         if (keyword != null) {
-            return phoneRepository.search(keyword);
+            return productRepository.searchByName(keyword);
         }
-        return phoneRepository.findAll();
+        return productRepository.findAll();
     }
 
     @Override
     public List<Product> getAllSearchByCategory(int id) {
          
         if (String.valueOf(id) != null) {
-            return phoneRepository.searchByCategory(id);
+            return productRepository.searchByCategory(id);
         }
-        return phoneRepository.findAll();
+        return productRepository.findAll();
     }
 
     @Override
     public List<Product> getAllSearchByBrand(int id) {
         if (String.valueOf(id) != null) {
-            return phoneRepository.searchByBrand(id);
+            return productRepository.searchByBrand(id);
         }
-        return phoneRepository.findAll();
+        return productRepository.findAll();
+    }
+
+    @Override
+    public Optional<Product> getAllSearch(String keyword) {
+        return productRepository.searchAll(keyword); 
     }
     
     

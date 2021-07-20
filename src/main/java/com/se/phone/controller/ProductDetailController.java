@@ -5,11 +5,16 @@
  */
 package com.se.phone.controller;
 
+import com.se.phone.constants.ErrorCode;
+import com.se.phone.constants.SuccessCode;
 import com.se.phone.converter.ProductDetailConverter;
 import com.se.phone.dto.ProductDetailDTO;
 import com.se.phone.dto.ResponseDTO;
 import com.se.phone.entity.ProductDetail;
+import com.se.phone.exception.CreateDataFailException;
 import com.se.phone.exception.DataNotFoundException;
+import com.se.phone.exception.DeleteDataFailException;
+import com.se.phone.exception.UpdateDataFailException;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +31,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import com.se.phone.service.ProductDetailService;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 
 /**
@@ -41,15 +48,19 @@ public class ProductDetailController {
         this.productDetailService = productDetailService;
         this.productDetailConverter = productDetailConverter;
     }
-    
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProductDetailController.class);
     @GetMapping("/productdetail")
     //@PreAuthorize("hasRole('PM') or hasRole('ADMIN')")
     public ResponseEntity<ResponseDTO> getAllOption() throws DataNotFoundException{
         ResponseDTO response = new ResponseDTO();
         List<ProductDetail>list= productDetailService.getAll();
-        response.setData(list.stream().map(productDetailConverter::convertToDTO).collect(Collectors.toList()));
-        return ResponseEntity.ok().body(response);
-                
+        if(list.size()==0){
+            response.setData(list.stream().map(productDetailConverter::convertToDTO).collect(Collectors.toList()));
+            response.setSuccessCode(SuccessCode.PRODUCTDETAIL_FIND_SUCCESS);
+        }else{
+            response.setErrorCode(ErrorCode.ERR_PRODUCTDETAIL_NOT_FOUND);
+        }
+        return ResponseEntity.ok().body(response);        
     }
 
    
@@ -57,25 +68,40 @@ public class ProductDetailController {
     //@PreAuthorize("hasRole('PM') or hasRole('ADMIN')")
     public ResponseEntity<ResponseDTO> getOption(@PathVariable int Id)throws DataNotFoundException{
         ResponseDTO response = new ResponseDTO();
-        ProductDetail o = productDetailService.getById(Id);
-        ProductDetailDTO productDetailDTO= productDetailConverter.convertToDTO(o);
-        response.setData(productDetailDTO);
+        try {
+            ProductDetail o = productDetailService.getById(Id);
+            ProductDetailDTO productDetailDTO= productDetailConverter.convertToDTO(o);
+            response.setData(productDetailDTO);
+            response.setSuccessCode(SuccessCode.PRODUCTDETAIL_FIND_SUCCESS);
+        } catch (Exception e) {
+            response.setErrorCode(ErrorCode.ERR_PRODUCTDETAIL_NOT_FOUND);
+            throw new DataNotFoundException(ErrorCode.ERR_PRODUCTDETAIL_NOT_FOUND);
+        }
+        
         return ResponseEntity.ok().body(response);
     }
     
     @PostMapping("/productdetail")
     @PreAuthorize("hasRole('PM') or hasRole('ADMIN')")
-    public ResponseEntity<ResponseDTO> addOption(@RequestBody ProductDetailDTO o)throws DataNotFoundException{
-        ProductDetail productDetail= productDetailConverter.convertToEntity(o);
-        productDetailService.save(productDetail);
+    public ResponseEntity<ResponseDTO> addOption(@RequestBody ProductDetailDTO o)throws CreateDataFailException{
         ResponseDTO response = new ResponseDTO();
-        response.setData(productDetailConverter.convertToDTO(productDetail));//o 
+        try {
+            ProductDetail productDetail= productDetailConverter.convertToEntity(o);
+            productDetailService.save(productDetail);
+            response.setData(productDetailConverter.convertToDTO(productDetail));//o
+            response.setSuccessCode(SuccessCode.PRODUCTDETAIL_CREATE_SUCCESS);
+        } catch (Exception e) {
+            response.setErrorCode(ErrorCode.ERR_CREATE_ORDERDETAIL_FAIL);
+            throw new CreateDataFailException(ErrorCode.ERR_CREATE_ORDERDETAIL_FAIL);
+        }
         return ResponseEntity.ok().body(response);
     }
 
     @PutMapping("/productdetail")
     @PreAuthorize("hasRole('PM') or hasRole('ADMIN')")
-    public ResponseEntity<ResponseDTO> updateOption(@RequestBody ProductDetail o)throws DataNotFoundException{
+    public ResponseEntity<ResponseDTO> updateOption(@RequestBody ProductDetail o)throws UpdateDataFailException{
+        ResponseDTO response = new ResponseDTO();
+        try {
             ProductDetail productDetail= productDetailService.getById(o.getId());
             productDetail.setScreenSize(o.getScreenSize());  
             productDetail.setScreenTechnology(o.getScreenTechnology());
@@ -89,10 +115,13 @@ public class ProductDetailController {
             productDetail.setSystem(o.getSystem());
             //option.set
             productDetailService.save(productDetail);
-            ResponseDTO response = new ResponseDTO();
             response.setData(productDetailConverter.convertToDTO(productDetail));//o 
-            return ResponseEntity.ok().body(response);
-              
+            response.setSuccessCode(SuccessCode.PRODUCTDETAIL_UPDATE_SUCCESS);
+        } catch (Exception e) {
+            response.setErrorCode(ErrorCode.ERR_UPDATE_PRODUCTDETAIL_FAIL);
+            throw new UpdateDataFailException(ErrorCode.ERR_UPDATE_PRODUCTDETAIL_FAIL);
+        }
+            return ResponseEntity.ok().body(response);       
     }
 //    @PatchMapping("/option/{id}")
 //    @PreAuthorize("hasRole('PM') or hasRole('ADMIN')")
@@ -110,11 +139,17 @@ public class ProductDetailController {
     
     @DeleteMapping("/productdetail/{Id}")
     @PreAuthorize("hasRole('PM') or hasRole('ADMIN')")
-    public ResponseEntity<ResponseDTO> deteteOption(@PathVariable int Id)throws DataNotFoundException{
-        ProductDetail o= productDetailService.getById(Id);
-        productDetailService.deleteById(Id);
+    public ResponseEntity<ResponseDTO> deteteOption(@PathVariable int Id)throws DeleteDataFailException{
         ResponseDTO response = new ResponseDTO();
-        response.setData("Delete sucess OptionId= "+Id);//o 
+        try {
+            ProductDetail o= productDetailService.getById(Id);
+            productDetailService.deleteById(Id);
+            response.setData("Delete sucess OptionId= "+Id);//o 
+            response.setSuccessCode(SuccessCode.PRODUCTDETAIL_DELETE_SUCCESS);
+        } catch (Exception e) {
+            response.setErrorCode(ErrorCode.ERR_DELETE_PRODUCTDETAIL_FAIL);
+            throw new DeleteDataFailException(ErrorCode.ERR_DELETE_PRODUCTDETAIL_FAIL);
+        }
         return ResponseEntity.ok().body(response);
     }
     

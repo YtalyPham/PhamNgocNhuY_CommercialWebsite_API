@@ -5,6 +5,8 @@
  */
 package com.se.phone.controller;
 
+import com.se.phone.constants.ErrorCode;
+import com.se.phone.constants.SuccessCode;
 import com.se.phone.converter.ProductConverter;
 import com.se.phone.dto.ProductDTO;
 import com.se.phone.dto.ResponseDTO;
@@ -13,7 +15,11 @@ import com.se.phone.entity.ProductDetail;
 import com.se.phone.entity.Product;
 import com.se.phone.entity.Brand;
 import com.se.phone.exception.ApiRequestException;
+import com.se.phone.exception.CreateDataFailException;
 import com.se.phone.exception.DataNotFoundException;
+import com.se.phone.exception.DeleteDataFailException;
+import com.se.phone.exception.DuplicateDataException;
+import com.se.phone.exception.UpdateDataFailException;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
@@ -36,6 +42,8 @@ import com.se.phone.service.CategoryService;
 import com.se.phone.service.ProductService;
 import com.se.phone.service.ProductDetailService;
 import com.se.phone.service.BrandService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 
 /**
@@ -58,7 +66,7 @@ public class ProductController {
         this.producerService = producerService;
         this.phoneConverter = phoneConverter;
     }
-    
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProductController.class);
     //SORT
     //http://localhost:8080/Ytalyphone/product?sortBy=name
     @GetMapping("/product")
@@ -67,8 +75,15 @@ public class ProductController {
             @RequestParam Optional<String> sortBy)throws DataNotFoundException{
         //getContent() output list of Category or not output go Page<Catagory>
         ResponseDTO response = new ResponseDTO(); 
-        List<Product> list= phoneService.getAllSort(page,sortBy).getContent();
-        response.setData(list.stream().map(phoneConverter::convertToDTO).collect(Collectors.toList()));
+        try {
+            List<Product> list= phoneService.getAllSort(page,sortBy).getContent();
+            response.setData(list.stream().map(phoneConverter::convertToDTO).collect(Collectors.toList()));
+            response.setSuccessCode(SuccessCode.PRODUCT_FIND_SUCCESS);
+        } catch (Exception e) {
+            response.setErrorCode(ErrorCode.ERR_PRODUCT_NOT_FOUND);
+            throw new DataNotFoundException(ErrorCode.ERR_PRODUCT_NOT_FOUND);
+        }
+        
         return ResponseEntity.ok().body(response);
                 
     }
@@ -97,42 +112,69 @@ public class ProductController {
         response.setData(list.stream().map(phoneConverter::convertToDTO).collect(Collectors.toList()));
         return ResponseEntity.ok().body(response);
     }
+     @GetMapping("/product/searchAll/{name}") 
+    public ResponseEntity<ResponseDTO> searchAll(@PathVariable String name)throws DataNotFoundException{
+        ResponseDTO response = new ResponseDTO(); 
+            Optional<Product> list= phoneService.getAllSearch(name.toLowerCase());
+            if(list.isPresent()){
+                response.setData(list.stream().map(phoneConverter::convertToDTO).collect(Collectors.toList()));
+                response.setSuccessCode(SuccessCode.PRODUCT_FIND_SUCCESS);
+            }else{
+                response.setErrorCode(ErrorCode.ERR_PRODUCT_NOT_FOUND);
+            }
+        return ResponseEntity.ok().body(response);
+    }
     
     @GetMapping("/product/{Id}")
     public ResponseEntity<ResponseDTO> getPhone(@PathVariable int Id)throws DataNotFoundException{
+        
         ResponseDTO response = new ResponseDTO();
-        Product phone = phoneService.getById(Id);
-        ProductDTO phoneDTO= phoneConverter.convertToDTO(phone);
-        response.setData(phoneDTO);
-        return ResponseEntity.ok().body(response);
+        try {
+            Product phone = phoneService.getById(Id);
+            ProductDTO phoneDTO= phoneConverter.convertToDTO(phone);
+            response.setData(phoneDTO);
+            response.setSuccessCode(SuccessCode.PRODUCT_FIND_SUCCESS);
+        } catch (Exception e) {
+            response.setErrorCode(ErrorCode.ERR_PRODUCT_NOT_FOUND);
+            throw new DataNotFoundException(ErrorCode.ERR_PRODUCT_NOT_FOUND);
+        }
+       return ResponseEntity.ok().body(response);
     }
     
     @PostMapping("/product")
     @PreAuthorize("hasRole('PM') or hasRole('ADMIN')")
-    public ResponseEntity<ResponseDTO> addPhone(@RequestBody ProductDTO p)throws DataNotFoundException{
+    public ResponseEntity<ResponseDTO> addPhone(@RequestBody ProductDTO p)throws CreateDataFailException,DuplicateDataException{
         ResponseDTO response = new ResponseDTO();
         List<Product> list= phoneService.getAll();
         int temp=0;
         for (int i=0;i<list.size();i++) {
             if(list.get(i).getName().equalsIgnoreCase(p.getName())==true){
                     temp++;
-                    throw new ApiRequestException("Trùng name");   
+                    response.setErrorCode(ErrorCode.ERR_PRODUCT_EXISTED);
+                    throw new DuplicateDataException(ErrorCode.ERR_PRODUCT_EXISTED);   
                 
             }
         }
-        if(temp==0){
-            Product phone= phoneConverter.convertToEntity(p);
-            phoneService.save(phone);
-            response.setData(p);
-            return ResponseEntity.ok().body(response);
+        try {
+            if(temp==0){
+                Product phone= phoneConverter.convertToEntity(p);
+                phoneService.save(phone);
+                response.setData(p);
+                response.setSuccessCode(SuccessCode.PRODUCT_CREATE_SUCCESS);
+            }
+        } catch (Exception e) {
+            response.setErrorCode(ErrorCode.ERR_CREATE_PRODUCT_FAIL);
+            throw new CreateDataFailException(ErrorCode.ERR_CREATE_PRODUCT_FAIL);
         }
-        return null; 
+        return ResponseEntity.ok().body(response);
     }
  
     @PutMapping("/product")
     @PreAuthorize("hasRole('PM') or hasRole('ADMIN')")
-    public ResponseEntity<ResponseDTO> updatePhone(@RequestBody ProductDTO p)throws DataNotFoundException{
-            Product phone= phoneService.getById(p.getId());
+    public ResponseEntity<ResponseDTO> updatePhone(@RequestBody ProductDTO p)throws UpdateDataFailException{
+         ResponseDTO response = new ResponseDTO();
+        try {
+             Product phone= phoneService.getById(p.getId());
             phone.setName(p.getName());  
             phone.setPrice(p.getPrice());
             phone.setAmount(p.getAmount());  
@@ -150,8 +192,12 @@ public class ProductController {
                 phone.setBrand(pr);  
             }
             phoneService.save(phone);
-            ResponseDTO response = new ResponseDTO();
-            response.setData(phoneConverter.convertToDTO(phone));
+             response.setData(phoneConverter.convertToDTO(phone));
+             response.setSuccessCode(SuccessCode.PRODUCT_UPDATE_SUCCESS);
+        } catch (Exception e) {
+            response.setErrorCode(ErrorCode.ERR_UPDATE_PRODUCT_FAIL);
+            throw new UpdateDataFailException(ErrorCode.ERR_UPDATE_PRODUCT_FAIL);
+        }
             return ResponseEntity.ok().body(response);
           
     }
@@ -171,12 +217,19 @@ public class ProductController {
     
     @DeleteMapping("/product/{Id}")
     @PreAuthorize("hasRole('PM') or hasRole('ADMIN')")
-    public ResponseEntity<ResponseDTO> detetePhone(@PathVariable int Id)throws DataNotFoundException{
+    public ResponseEntity<ResponseDTO> detetePhone(@PathVariable int Id)throws DeleteDataFailException{
         ResponseDTO response = new ResponseDTO(); 
-        Product p= phoneService.getById(Id);
-        phoneService.deleteById(Id);
-        String temp="Delete success id"+Id;
-        response.setData(temp);
+        try {
+             Product p= phoneService.getById(Id);
+            phoneService.deleteById(Id);
+            String temp="Delete success id"+Id;
+            response.setData(temp);
+            response.setSuccessCode(SuccessCode.PRODUCT_DELETE_SUCCESS);
+        } catch (Exception e) {
+            response.setErrorCode(ErrorCode.ERR_DELETE_PRODUCT_FAIL);
+            throw new DeleteDataFailException(ErrorCode.ERR_DELETE_PRODUCT_FAIL);
+        }
+       
         return ResponseEntity.ok().body(response);
     }
  

@@ -24,5 +24,6 @@ public interface ProductService {
     public List<Product> getAllSearchByName(String keyword);
     public List<Product> getAllSearchByCategory(int id);
     public List<Product> getAllSearchByBrand(int id);
+    public Optional<Product> getAllSearch(String keyword);
     public Product getById(int id);
 }

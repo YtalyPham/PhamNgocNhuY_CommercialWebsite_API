@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  *
  * @author PhamNgocNhuY_18055121
  */
-@ResponseStatus(value = HttpStatus.BAD_REQUEST)
+@ResponseStatus(value = HttpStatus.UNAUTHORIZED)
 public class UserFailException extends Exception{
     private static final long serialVersionUID = 4L;
 

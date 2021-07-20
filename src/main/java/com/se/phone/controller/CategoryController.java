@@ -5,12 +5,18 @@
  */
 package com.se.phone.controller;
 
+import com.se.phone.constants.ErrorCode;
+import com.se.phone.constants.SuccessCode;
 import com.se.phone.converter.CategoryConverter;
 import com.se.phone.dto.CategoryDTO;
 import com.se.phone.dto.ResponseDTO;
 import com.se.phone.entity.Category;
 import com.se.phone.exception.ApiRequestException;
+import com.se.phone.exception.CreateDataFailException;
 import com.se.phone.exception.DataNotFoundException;
+import com.se.phone.exception.DeleteDataFailException;
+import com.se.phone.exception.DuplicateDataException;
+import com.se.phone.exception.UpdateDataFailException;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,11 +59,18 @@ public class CategoryController {
     @GetMapping("/category/{cateId}")
     public ResponseEntity<ResponseDTO> getCategory(@PathVariable("cateId")Integer cateId) throws DataNotFoundException {
         ResponseDTO response = new ResponseDTO();
-        Category category = categoryService.getById(cateId);
-        //convert category --> categoryDTO
-        CategoryDTO cateDao = categoryConverter.convertToDTO(category);
-        //set response data to categoryDTO
-        response.setData(cateDao);
+        try {
+            Category category = categoryService.getById(cateId);
+            //convert category --> categoryDTO
+            CategoryDTO cateDao = categoryConverter.convertToDTO(category);
+            //set response data to categoryDTO
+            response.setData(cateDao);
+            response.setSuccessCode(SuccessCode.CATEGORY_FIND_SUCCESS);
+        } catch (Exception e) {
+            response.setErrorCode(ErrorCode.ERR_CATEGORY_NOT_FOUND);
+            throw new DataNotFoundException(ErrorCode.ERR_CATEGORY_NOT_FOUND);
+        }
+        
         return ResponseEntity.ok().body(response);
     }
 
@@ -70,10 +83,13 @@ public class CategoryController {
         //getContent() output list of Category or not output go Page<Catagory>
         ResponseDTO response = new ResponseDTO();
         List<Category> list= categoryService.getAllSort(page,sortBy).getContent();
-        response.setData(list.stream().map(categoryConverter::convertToDTO).collect(Collectors.toList()));
-        return ResponseEntity.ok().body(response);
-         
-                
+        if(list.size()==0){
+            response.setData(list.stream().map(categoryConverter::convertToDTO).collect(Collectors.toList()));
+            response.setSuccessCode(SuccessCode.CATEGORY_FIND_SUCCESS);
+        }else{
+            response.setErrorCode(ErrorCode.ERR_CATEGORY_NOT_FOUND);
+        }
+        return ResponseEntity.ok().body(response);       
     }
 
     //http://localhost:8080/Ytalyphone/category/search/Tablet
@@ -81,53 +97,74 @@ public class CategoryController {
     public ResponseEntity<ResponseDTO> searchByName(@PathVariable String name)throws DataNotFoundException{
         ResponseDTO response = new ResponseDTO();
         List<Category> list=categoryService.getAllSearch(name.toLowerCase());
-        response.setData(list.stream().map(categoryConverter::convertToDTO).collect(Collectors.toList()));
+        if(list.size()==0){
+            response.setData(list.stream().map(categoryConverter::convertToDTO).collect(Collectors.toList()));
+            response.setSuccessCode(SuccessCode.CATEGORY_FIND_SUCCESS);
+        }else{
+            response.setErrorCode(ErrorCode.ERR_CATEGORY_NOT_FOUND);
+        }
         return  ResponseEntity.ok().body(response);
     }
     
     
     @PostMapping("/category")
-    public ResponseEntity<ResponseDTO> addCatagory(@RequestBody CategoryDTO c)throws DataNotFoundException{
+    public ResponseEntity<ResponseDTO> addCatagory(@RequestBody CategoryDTO c)throws DuplicateDataException,CreateDataFailException{
         int temp=0;
         ResponseDTO response = new ResponseDTO();
         List<Category> l= categoryService.getAll();
         for (int i=0;i<l.size();i++) {
             if (l.get(i).getName().equalsIgnoreCase(c.getName())==true) {
                 temp++;
-               throw new ApiRequestException("Thêm trùng name");
+                response.setErrorCode(ErrorCode.ERR_CATEGORY_EXISTED);
+               throw new DuplicateDataException(ErrorCode.ERR_CATEGORY_EXISTED);
             }  
         }
-        if(temp==0){
-            
-            Category category=categoryConverter.convertToEntity(c);
-            categoryService.save(category);
-            response.setData(c);
-            return ResponseEntity.ok().body(response);
+        try {
+            if(temp==0){
+                Category category=categoryConverter.convertToEntity(c);
+                categoryService.save(category);
+                response.setData(c);
+                response.setSuccessCode(SuccessCode.CATEGORY_CREATE_SUCCESS);
+            }
+        } catch (Exception e) {
+            response.setErrorCode(ErrorCode.ERR_CREATE_CATEGORY_FAIL);
+            throw new CreateDataFailException(ErrorCode.ERR_CREATE_CATEGORY_FAIL);
         }
-        return null;
+        return ResponseEntity.ok().body(response);
     }
     
     @PutMapping("/category")
-    public ResponseEntity<ResponseDTO> updateCatagory(@RequestBody CategoryDTO c)throws DataNotFoundException{
+    public ResponseEntity<ResponseDTO> updateCatagory(@RequestBody CategoryDTO c)throws UpdateDataFailException{
             ResponseDTO response = new ResponseDTO();    
-            Category catagory= categoryService.getById(c.getId());
-            catagory.setName(c.getName());    
-         //   catagory.setImg(imageServiceImpl.getFile(c.getImgId()));
-            categoryService.save(catagory);
+            try {
+                Category catagory= categoryService.getById(c.getId());
+                catagory.setName(c.getName());    
+             //   catagory.setImg(imageServiceImpl.getFile(c.getImgId()));
+                categoryService.save(catagory);
+                response.setData(c);
+                response.setSuccessCode(SuccessCode.CATEGORY_UPDATE_SUCCESS);
+            } catch (Exception e) {
+                response.setErrorCode(ErrorCode.ERR_UPDATE_CATEGORY_FAIL);
+                throw new UpdateDataFailException(ErrorCode.ERR_UPDATE_CATEGORY_FAIL);
+            }
             
-            response.setData(c);
             return ResponseEntity.ok().body(response);
     }
     
     
     @DeleteMapping("/category/{Id}")
-    public ResponseEntity<ResponseDTO> deteteCatagory(@PathVariable int Id) throws DataNotFoundException{
-         
-        Category c= categoryService.getById(Id);
-        categoryService.deleteById(Id);
+    public ResponseEntity<ResponseDTO> deteteCatagory(@PathVariable int Id) throws DeleteDataFailException{
         ResponseDTO response = new ResponseDTO(); 
-        String temp="Delete success id"+Id;
-        response.setData(temp);
+        try {
+            Category c= categoryService.getById(Id);
+            categoryService.deleteById(Id);
+            String temp="Delete success id"+Id;
+            response.setData(temp);
+            response.setSuccessCode(SuccessCode.CATEGORY_DELETE_SUCCESS);
+        } catch (Exception e) {
+            response.setErrorCode(ErrorCode.ERR_DELETE_CATEGORY_FAIL);
+            throw new DeleteDataFailException(ErrorCode.ERR_DELETE_CATEGORY_FAIL);
+        }
         return ResponseEntity.ok().body(response);
          
     }
