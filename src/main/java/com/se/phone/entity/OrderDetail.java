@@ -15,6 +15,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,7 +30,7 @@ import lombok.Setter;
 @Entity
 @Table(name = "orderdetail",
        indexes = {
-            @Index(name = "orderdetail_name_index" , columnList = "id , unit")
+            @Index(name = "orderdetail_productid_index" , columnList = "id , product_id")
 })
 @Getter
 @Setter
@@ -40,12 +43,17 @@ public class OrderDetail {
     @Column(name="id")
     private int id;
     
+    @NotNull
+    @Size(min=1, message="Unit should have atleast 1 characters")
     @Column(name = "unit")
     private String unit;
     
+    @NotNull
+    @Min(value = 1, message = "Amount atleast 1 unit")
     @Column(name = "amount")
     private int amount;
     
+    @NotNull(message="totalPrice should not null")
     @Column(name = "totalPrice")
     private Double totalPrice;
     

@@ -17,6 +17,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,7 +29,7 @@ import lombok.Setter;
  */
 @Entity
 @Table(name = "orders",indexes = {
-            @Index(name = "orders_name_index" , columnList = "id , discountPer")
+            @Index(name = "orders_userid_index" , columnList = "id , user_id")
 })
 @Getter
 @Setter
@@ -50,11 +51,11 @@ public class Order {
     private Timestamp date;
     
     @ManyToOne
-    @JoinColumn(name = "user_fk")
+    @JoinColumn(name = "user_id")
     private User user;
     
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "orderDetail_fk", referencedColumnName = "id")
+    @JoinColumn(name = "orderDetail_id", referencedColumnName = "id")
     private OrderDetail orderDetail;
 
     @Override

@@ -12,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -35,57 +36,75 @@ public class ProductDetail {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     
+    @NotNull(message = "screenSize can not null")
     @Column(name="screenSize")
     private String screenSize;
     
+    @NotNull(message = "screenTechnology can not null")
     @Column(name="screenTechnology")
     private String screenTechnology;
     
+    @NotNull(message = "cameraBack can not null")
     @Column(name="cameraBack")
     private String cameraBack;
     
+    @NotNull(message = "cameraFont can not null")
     @Column(name="cameraFont")
     private String cameraFont;
     
+    @NotNull(message = "chipset can not null")
     @Column(name="chipset")
     private String chipset;
     
+    @NotNull(message = "RAM can not null")
     @Column(name="RAM")
     private String RAM;
     
+    @NotNull(message = "memory can not null")
     @Column(name="memory")
     private String memory;
     
+    @NotNull(message = "battery can not null")
     @Column(name="battery")
     private String battery;
     
+    @NotNull(message = "SIM can not null")
     @Column(name="SIM")
     private String SIM;
     
+    @NotNull(message = "system can not null")
     @Column(name="system")
     private String system;
     
+    @NotNull(message = "screenResolution can not null")
     @Column(name="screenResolution")
     private String screenResolution;
     
+    @NotNull(message = "size can not null")
     @Column(name="size")
     private String size;
     
+    @NotNull(message = "weight can not null")
     @Column(name="weight")
     private String weight;
     
+    @NotNull(message = "chargingTechnology can not null")
     @Column(name="chargingTechnology")
     private String chargingTechnology;
     
+    @NotNull(message = "chargingPort can not null")
     @Column(name="chargingPort")
     private String chargingPort;
     
+    @NotNull(message = "sensors can not null")
     @Column(name="sensors")
     private String sensors;
     
+    @NotNull(message = "wiFi can not null")
     @Column(name="wiFi")
     private String wiFi;
     
+    @NotNull(message = "bluetooth can not null")
     @Column(name="bluetooth")
     private String bluetooth;
     

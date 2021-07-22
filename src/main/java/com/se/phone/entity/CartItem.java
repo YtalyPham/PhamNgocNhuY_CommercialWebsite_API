@@ -11,6 +11,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Index;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -25,7 +27,7 @@ import lombok.Setter;
 @Entity
 @Table(name = "CartItem" ,
        indexes = {
-            @Index(name = "cartitem_name_index" , columnList = "id , unit")
+            @Index(name = "cartitem_cartid_index" , columnList = "id , cart_id")
  })
 @Getter
 @Setter
@@ -48,16 +50,17 @@ public class CartItem {
      @Column(name = "price")
     private Double price;
     
-    @OneToOne(mappedBy = "cartItem")
-    private Cart card;
+    @ManyToOne
+    @JoinColumn(name = "cart_id")
+    private Cart cart;
+
+    //many to one to product
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    private Product product;
 
     @Override
     public String toString() {
-        return "CartItem{" + "id=" + id + ", unit=" + unit + ", amount=" + amount + ", totalPrice=" + totalPrice + ", price=" + price + ", card=" + card + '}';
+        return "CartItem{" + "id=" + id + ", unit=" + unit + ", amount=" + amount + ", totalPrice=" + totalPrice + ", price=" + price + ", cart=" + cart + ", product=" + product + '}';
     }
-
-    
-    
-    
-    
 }

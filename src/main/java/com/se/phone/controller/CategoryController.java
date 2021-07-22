@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.se.phone.service.CategoryService;
 import com.se.phone.service.impl.ImageServiceImpl;
 import java.util.stream.Collectors;
+import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -108,7 +109,7 @@ public class CategoryController {
     
     
     @PostMapping("/category")
-    public ResponseEntity<ResponseDTO> addCatagory(@RequestBody CategoryDTO c)throws DuplicateDataException,CreateDataFailException{
+    public ResponseEntity<ResponseDTO> addCatagory(@Valid @RequestBody CategoryDTO c)throws DuplicateDataException,CreateDataFailException{
         int temp=0;
         ResponseDTO response = new ResponseDTO();
         List<Category> l= categoryService.getAll();
@@ -134,7 +135,7 @@ public class CategoryController {
     }
     
     @PutMapping("/category")
-    public ResponseEntity<ResponseDTO> updateCatagory(@RequestBody CategoryDTO c)throws UpdateDataFailException{
+    public ResponseEntity<ResponseDTO> updateCatagory(@Valid @RequestBody CategoryDTO c)throws UpdateDataFailException{
             ResponseDTO response = new ResponseDTO();    
             try {
                 Category catagory= categoryService.getById(c.getId());

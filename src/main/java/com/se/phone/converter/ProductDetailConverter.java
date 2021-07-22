@@ -5,9 +5,11 @@
  */
 package com.se.phone.converter;
 
+import com.se.phone.constants.ErrorCode;
 import com.se.phone.dto.ProductDetailDTO;
 import com.se.phone.entity.ProductDetail;
 import com.se.phone.exception.ApiRequestException;
+import com.se.phone.exception.ConvertEntityDTOException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -23,12 +25,12 @@ public class ProductDetailConverter {
     public ProductDetailConverter(ModelMapper modelMapper) {
         this.modelMapper = modelMapper;
     }
-     public ProductDetail convertToEntity(ProductDetailDTO dto){
+     public ProductDetail convertToEntity(ProductDetailDTO dto) {
         try {
             ProductDetail productDetail= modelMapper.map(dto,ProductDetail.class);
             return productDetail;
         } catch (Exception e) {
-             throw new ApiRequestException("Can't convert to Entity",e);
+             throw new ApiRequestException(ErrorCode.ERR_CONVERTENTITY_FAIL);
         }
     }
      
@@ -37,7 +39,7 @@ public class ProductDetailConverter {
             ProductDetailDTO productDetailDTO=modelMapper.map(productDetail,ProductDetailDTO.class);            
             return productDetailDTO;
         } catch (Exception e) {
-            throw new ApiRequestException("Can't convert to DTO",e);
+             throw new ApiRequestException(ErrorCode.ERR_CONVERTDTO_FAIL);
         }
      }
 }

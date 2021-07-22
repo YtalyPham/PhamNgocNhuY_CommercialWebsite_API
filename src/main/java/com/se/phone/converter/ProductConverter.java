@@ -5,6 +5,7 @@
  */
 package com.se.phone.converter;
 
+import com.se.phone.constants.ErrorCode;
 import com.se.phone.dto.ProductDTO;
 import com.se.phone.entity.Category;
 import com.se.phone.entity.Image;
@@ -12,6 +13,7 @@ import com.se.phone.entity.ProductDetail;
 import com.se.phone.entity.Product;
 import com.se.phone.entity.Brand;
 import com.se.phone.exception.ApiRequestException;
+import com.se.phone.exception.ConvertEntityDTOException;
 import com.se.phone.reposity.ImageRepository;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +49,7 @@ public class ProductConverter {
     }
 
     //converToEntity
-    public Product convertToEntity(ProductDTO dto){
+    public Product convertToEntity(ProductDTO dto) {
         try {
             Product phone= modelMapper.map(dto,Product.class);
             Category category= catagoryRepository.getById(dto.getCategoryId());
@@ -73,11 +75,11 @@ public class ProductConverter {
             return phone;
             
         } catch (Exception e) {
-            throw new ApiRequestException("Can't convert to Entity",e);
+            throw new ApiRequestException(ErrorCode.ERR_CONVERTENTITY_FAIL);
         }
     }
     
-    public ProductDTO convertToDTO(Product phone){
+    public ProductDTO convertToDTO(Product phone) {
         try {
             ProductDTO phoneDTO=modelMapper.map(phone,ProductDTO.class);
             //String temp= phone.getImg().getId();
@@ -94,7 +96,7 @@ public class ProductConverter {
             return phoneDTO;
             
        } catch (Exception e) {
-           throw new ApiRequestException("Can't convert to DTO",e);
+            throw new ApiRequestException(ErrorCode.ERR_CONVERTDTO_FAIL);
         }
     }
 }

@@ -31,6 +31,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import com.se.phone.service.ProductDetailService;
 import java.util.stream.Collectors;
+import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -83,7 +84,7 @@ public class ProductDetailController {
     
     @PostMapping("/productdetail")
     @PreAuthorize("hasRole('PM') or hasRole('ADMIN')")
-    public ResponseEntity<ResponseDTO> addOption(@RequestBody ProductDetailDTO o)throws CreateDataFailException{
+    public ResponseEntity<ResponseDTO> addOption(@Valid @RequestBody ProductDetailDTO o)throws CreateDataFailException{
         ResponseDTO response = new ResponseDTO();
         try {
             ProductDetail productDetail= productDetailConverter.convertToEntity(o);
@@ -99,7 +100,7 @@ public class ProductDetailController {
 
     @PutMapping("/productdetail")
     @PreAuthorize("hasRole('PM') or hasRole('ADMIN')")
-    public ResponseEntity<ResponseDTO> updateOption(@RequestBody ProductDetail o)throws UpdateDataFailException{
+    public ResponseEntity<ResponseDTO> updateOption(@Valid @RequestBody ProductDetail o)throws UpdateDataFailException{
         ResponseDTO response = new ResponseDTO();
         try {
             ProductDetail productDetail= productDetailService.getById(o.getId());

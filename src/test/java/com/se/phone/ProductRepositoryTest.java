@@ -6,6 +6,9 @@
 package com.se.phone;
 
 import com.se.phone.entity.Product;
+import com.se.phone.reposity.BrandRepository;
+import com.se.phone.reposity.CategoryRepository;
+import com.se.phone.reposity.ProductDetailRepository;
 import com.se.phone.reposity.ProductRepository;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import org.junit.jupiter.api.Test;
@@ -24,10 +27,30 @@ public class ProductRepositoryTest {
     @Autowired
     ProductRepository productRepository;
     
+    @Autowired
+    CategoryRepository categoryRepository;
+    
+    @Autowired
+    BrandRepository brandRepository;
+    
+    @Autowired
+    ProductDetailRepository productDetailRepository;
+    
     @Test
     public void testCreateNewProductSuccess(){
-        Product product = new Product();
-        product.setName("Iphone 10");
-        assertNotNull(productRepository.save(product));
+        Product p = new Product();
+        p.setName("Iphone 10");
+        p.setName("test1");
+        p.setPrice(1500000.00);
+        p.setAmount(12);
+        p.setStatus("still");
+        p.setDiscountPer(0.5);
+        
+        p.setRating(4.0);
+        
+        p.setCategory(categoryRepository.getById(1));
+        p.setBrand(brandRepository.getById(5));
+        p.setProductDetail(productDetailRepository.getById(2));
+        assertNotNull(productRepository.save(p));
     }
 }

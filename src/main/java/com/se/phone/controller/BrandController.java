@@ -14,6 +14,7 @@ import com.se.phone.entity.Brand;
 import com.se.phone.exception.ApiRequestException;
 import com.se.phone.exception.CreateDataFailException;
 import com.se.phone.exception.DataNotFoundException;
+import com.se.phone.exception.DataValidationException;
 import com.se.phone.exception.DeleteDataFailException;
 import com.se.phone.exception.DuplicateDataException;
 import com.se.phone.exception.UpdateDataFailException;
@@ -36,6 +37,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.se.phone.service.BrandService;
 import com.se.phone.service.impl.ImageServiceImpl;
 import java.util.stream.Collectors;
+import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -110,8 +112,14 @@ public class BrandController {
     }
     
     @PostMapping("/brand")
-    public ResponseEntity<ResponseDTO> addBrand(@RequestBody BrandDTO p)throws CreateDataFailException,DuplicateDataException{
-         ResponseDTO response = new ResponseDTO();
+    public ResponseEntity<ResponseDTO> addBrand(@Valid @RequestBody BrandDTO p)throws CreateDataFailException,DuplicateDataException, DataValidationException{
+        
+        //validate name 
+      //  if(name_duplicate){}
+        //validate 
+        
+        //data valid
+        ResponseDTO response = new ResponseDTO();
         List<Brand> list= brandService.getAll();
         int temp=0;
         for (int i=0;i<list.size();i++) {
@@ -128,9 +136,10 @@ public class BrandController {
             brandService.save(brandConverter.convertToEntity(p));
             response.setData(p);
             response.setSuccessCode(SuccessCode.BRAND_CREATE_SUCCESS);
-            
+           }
         }
-        } catch (Exception e) {
+        
+        catch (Exception e) {
             response.setErrorCode(ErrorCode.ERR_CREATE_BRAND_FAIL);
             throw new CreateDataFailException(ErrorCode.ERR_CREATE_BRAND_FAIL);
         }
@@ -139,7 +148,7 @@ public class BrandController {
     }
     
     @PutMapping("/brand")
-    public ResponseEntity<ResponseDTO> updateBrand(@RequestBody BrandDTO p)throws UpdateDataFailException{
+    public ResponseEntity<ResponseDTO> updateBrand(@Valid @RequestBody BrandDTO p)throws UpdateDataFailException{
         ResponseDTO response = new ResponseDTO();
         try {
              Brand producer= brandService.getById(p.getId());

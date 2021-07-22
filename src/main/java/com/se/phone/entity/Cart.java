@@ -6,15 +6,18 @@
 package com.se.phone.entity;
 
 import java.sql.Timestamp;
+import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.MapsId;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -29,7 +32,7 @@ import lombok.Setter;
 @Entity
 @Table(name = "Cart" ,
        indexes = {
-            @Index(name = "card_name_index" , columnList = "id , createDate")
+            @Index(name = "card_userid_index" , columnList = "id , user_id")
  })
 @Getter
 @Setter
@@ -50,9 +53,8 @@ public class Cart {
     @JoinColumn(name = "user_id")  
     private User user; 
     
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "cartItem_id", referencedColumnName = "id")
-    private CartItem cartItem;
+    @OneToMany(mappedBy = "cart", fetch = FetchType.LAZY)//one to many
+    private List<CartItem> cartItems;
 
     @Override
     public String toString() {

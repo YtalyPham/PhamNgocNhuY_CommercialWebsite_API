@@ -42,6 +42,7 @@ import com.se.phone.service.CategoryService;
 import com.se.phone.service.ProductService;
 import com.se.phone.service.ProductDetailService;
 import com.se.phone.service.BrandService;
+import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -143,7 +144,7 @@ public class ProductController {
     
     @PostMapping("/product")
     @PreAuthorize("hasRole('PM') or hasRole('ADMIN')")
-    public ResponseEntity<ResponseDTO> addPhone(@RequestBody ProductDTO p)throws CreateDataFailException,DuplicateDataException{
+    public ResponseEntity<ResponseDTO> addPhone(@Valid @RequestBody ProductDTO p)throws CreateDataFailException,DuplicateDataException{
         ResponseDTO response = new ResponseDTO();
         List<Product> list= phoneService.getAll();
         int temp=0;
@@ -171,7 +172,7 @@ public class ProductController {
  
     @PutMapping("/product")
     @PreAuthorize("hasRole('PM') or hasRole('ADMIN')")
-    public ResponseEntity<ResponseDTO> updatePhone(@RequestBody ProductDTO p)throws UpdateDataFailException{
+    public ResponseEntity<ResponseDTO> updatePhone(@Valid @RequestBody ProductDTO p)throws UpdateDataFailException{
          ResponseDTO response = new ResponseDTO();
         try {
              Product phone= phoneService.getById(p.getId());

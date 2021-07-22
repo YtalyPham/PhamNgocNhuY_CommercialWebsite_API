@@ -5,9 +5,11 @@
  */
 package com.se.phone.converter;
 
+import com.se.phone.constants.ErrorCode;
 import com.se.phone.dto.BrandDTO;
 import com.se.phone.entity.Brand;
 import com.se.phone.exception.ApiRequestException;
+import com.se.phone.exception.ConvertEntityDTOException;
 import com.se.phone.reposity.BrandRepository;
 import com.se.phone.reposity.ImageRepository;
 import org.modelmapper.ModelMapper;
@@ -29,18 +31,18 @@ public class BrandConverter {
         this.brandRepository = brandRepository;
         this.imageRepository = imageRepository;
     }
-    public Brand convertToEntity(BrandDTO dto){
+    public Brand convertToEntity(BrandDTO dto) {
         try {
             Brand brand= modelMapper.map(dto,Brand.class);
             //brand.setImg(imageRepository.findById(dto.getImgId()).get());
             return brand;
         } catch (Exception e) {
-             throw new ApiRequestException("Can't convert to Entity",e);
+             throw new ApiRequestException(ErrorCode.ERR_CONVERTENTITY_FAIL);
         }
     }
 
   
-    public BrandDTO convertToDTO(Brand brand){
+    public BrandDTO convertToDTO(Brand brand) {
         try {
             BrandDTO brandDTO=modelMapper.map(brand,BrandDTO.class);
             
@@ -50,7 +52,7 @@ public class BrandConverter {
             
             return brandDTO;
         } catch (Exception e) {
-            throw new ApiRequestException("Can't convert to DTO",e);
+            throw new ApiRequestException(ErrorCode.ERR_CONVERTDTO_FAIL);
         }
         
         

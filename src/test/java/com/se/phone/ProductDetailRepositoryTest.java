@@ -24,7 +24,24 @@ public class ProductDetailRepositoryTest {
     @Test
     public void testCreateNewProductDetailSuccess(){
         ProductDetail productDetail = new ProductDetail();
-        productDetail.setBattery("5000");
+        productDetail.setBattery("test1");
+            productDetail.setBluetooth("test1");
+            productDetail.setCameraBack("test1");
+            productDetail.setCameraFont("test1");
+            productDetail.setChargingTechnology("test1");
+            productDetail.setChipset("test1");
+            productDetail.setMemory("test1");
+            productDetail.setRAM("test1");
+            productDetail.setSIM("test1");
+            productDetail.setScreenResolution("test1");
+            productDetail.setScreenSize("test1");
+            productDetail.setScreenTechnology("test1");
+            productDetail.setSensors("test1");
+            productDetail.setSize("test1");
+            productDetail.setSystem("test1");
+            productDetail.setWeight("test1");
+            productDetail.setWiFi("test1");
+            productDetail.setChargingPort("test1");
         assertNotNull(productDetailRepository.save(productDetail));
     }
 }

@@ -5,11 +5,13 @@
  */
 package com.se.phone.converter;
 
+import com.se.phone.constants.ErrorCode;
 import com.se.phone.dto.CategoryDTO;
 import com.se.phone.dto.ProductDTO;
 import com.se.phone.entity.Category;
 import com.se.phone.entity.Product;
 import com.se.phone.exception.ApiRequestException;
+import com.se.phone.exception.ConvertEntityDTOException;
 import com.se.phone.reposity.CategoryRepository;
 import com.se.phone.reposity.ImageRepository;
 import com.se.phone.reposity.ProductRepository;
@@ -52,9 +54,11 @@ public class CategoryConverter {
                  category.setProducts(list);
             }
             return category;
+            
         } catch (Exception e) {
-             throw new ApiRequestException("Can't convert to Entity",e);
+             throw new ApiRequestException(ErrorCode.ERR_CONVERTENTITY_FAIL);
         }
+        
     }
     public CategoryDTO convertToDTO(Category category){
         try {
@@ -69,7 +73,7 @@ public class CategoryConverter {
           //  categoryDTO.setImgId(category.getImg().getId());
             return categoryDTO;
         } catch (Exception e) {
-            throw new ApiRequestException("Can't convert to DTO",e);
+           throw new ApiRequestException(ErrorCode.ERR_CONVERTDTO_FAIL);
         }
         
         

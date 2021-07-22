@@ -18,6 +18,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -40,6 +42,8 @@ public class Category {
     @Column(name="id")
     private int id;
     
+    @NotNull
+    @Size(min=2, message="Name should have atleast 2 characters")
     @Column(name="name")
     private String name;
 

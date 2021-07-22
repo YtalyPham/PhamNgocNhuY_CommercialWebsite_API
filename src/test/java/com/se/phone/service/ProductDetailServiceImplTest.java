@@ -93,8 +93,7 @@ public class ProductDetailServiceImplTest {
             productDetail.setSystem("test1");
             productDetail.setWeight("test1");
             productDetail.setWiFi("test1");
-            
-            
+            productDetail.setChargingPort("test1");
             Assert.notNull(productDetailService.save(productDetail));
         }
         @Test void getIdNotFound(){
