@@ -35,11 +35,13 @@ import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 /**
  *
  * @author PhamNgocNhuY_18055121
  */
+@CrossOrigin(origins = "http://localhost:3000", maxAge = 3600)
 @RestController
 public class ProductDetailController {
     private ProductDetailService productDetailService;
@@ -55,7 +57,7 @@ public class ProductDetailController {
     public ResponseEntity<ResponseDTO> getAllOption() throws DataNotFoundException{
         ResponseDTO response = new ResponseDTO();
         List<ProductDetail>list= productDetailService.getAll();
-        if(list.size()==0){
+        if(list.size()>0){
             response.setData(list.stream().map(productDetailConverter::convertToDTO).collect(Collectors.toList()));
             response.setSuccessCode(SuccessCode.PRODUCTDETAIL_FIND_SUCCESS);
         }else{
@@ -114,6 +116,15 @@ public class ProductDetailController {
             productDetail.setBattery(o.getBattery());
             productDetail.setSIM(o.getSIM());
             productDetail.setSystem(o.getSystem());
+            productDetail.setScreenResolution(o.getScreenResolution());
+            productDetail.setSize(o.getSize());
+            productDetail.setWeight(o.getWeight());
+            productDetail.setChargingTechnology(o.getChargingTechnology());
+            productDetail.setChargingPort(o.getChargingPort());
+            productDetail.setSensors(o.getSensors());
+            productDetail.setWiFi(o.getWiFi());
+            productDetail.setBluetooth(o.getBluetooth());
+ 
             //option.set
             productDetailService.save(productDetail);
             response.setData(productDetailConverter.convertToDTO(productDetail));//o 

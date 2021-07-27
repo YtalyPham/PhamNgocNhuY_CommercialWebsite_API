@@ -41,11 +41,13 @@ import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 /**
  *
  * @author PhamNgocNhuY_18055121
  */
+@CrossOrigin(origins = "http://localhost:3000", maxAge = 3600)
 @RestController
 @PreAuthorize("hasRole('PM') or hasRole('ADMIN')")
 public class BrandController {
@@ -133,7 +135,8 @@ public class BrandController {
         }
         try {
             if(temp==0){
-            brandService.save(brandConverter.convertToEntity(p));
+            Brand b=brandService.save(brandConverter.convertToEntity(p));
+            p.setId(b.getId());
             response.setData(p);
             response.setSuccessCode(SuccessCode.BRAND_CREATE_SUCCESS);
            }
@@ -155,7 +158,7 @@ public class BrandController {
             producer.setName(p.getName());  
             producer.setCountry(p.getCountry());
             //producer.setImg(imageServiceImpl.getFile(p.getImgId()));
-            brandService.save(producer);
+            Brand br=brandService.save(producer);
             response.setData(brandConverter.convertToDTO(producer));
             response.setSuccessCode(SuccessCode.BRAND_UPDATE_SUCCESS);
         } catch (Exception e) {

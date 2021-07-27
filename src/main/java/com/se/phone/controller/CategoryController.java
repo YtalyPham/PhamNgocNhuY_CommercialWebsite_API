@@ -36,11 +36,13 @@ import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 /**
  *
  * @author PhamNgocNhuY_18055121
  */
+@CrossOrigin(origins = "http://localhost:3000", maxAge = 3600)
 @RestController
 @PreAuthorize("hasRole('PM') or hasRole('ADMIN')")
 public class CategoryController {
@@ -84,7 +86,7 @@ public class CategoryController {
         //getContent() output list of Category or not output go Page<Catagory>
         ResponseDTO response = new ResponseDTO();
         List<Category> list= categoryService.getAllSort(page,sortBy).getContent();
-        if(list.size()==0){
+        if(list.size()>0){
             response.setData(list.stream().map(categoryConverter::convertToDTO).collect(Collectors.toList()));
             response.setSuccessCode(SuccessCode.CATEGORY_FIND_SUCCESS);
         }else{
@@ -123,7 +125,8 @@ public class CategoryController {
         try {
             if(temp==0){
                 Category category=categoryConverter.convertToEntity(c);
-                categoryService.save(category);
+                Category cate=categoryService.save(category);
+                c.setId(cate.getId());
                 response.setData(c);
                 response.setSuccessCode(SuccessCode.CATEGORY_CREATE_SUCCESS);
             }
@@ -141,7 +144,8 @@ public class CategoryController {
                 Category catagory= categoryService.getById(c.getId());
                 catagory.setName(c.getName());    
              //   catagory.setImg(imageServiceImpl.getFile(c.getImgId()));
-                categoryService.save(catagory);
+                Category cate=categoryService.save(catagory);
+                c.setId(cate.getId());
                 response.setData(c);
                 response.setSuccessCode(SuccessCode.CATEGORY_UPDATE_SUCCESS);
             } catch (Exception e) {

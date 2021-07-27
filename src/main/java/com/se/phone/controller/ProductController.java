@@ -46,11 +46,13 @@ import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 /**
  *
  * @author PhamNgocNhuY_18055121
  */
+@CrossOrigin(origins = "http://localhost:3000", maxAge = 3600)
 @RestController
 public class ProductController {
     private ProductService phoneService;
@@ -160,6 +162,7 @@ public class ProductController {
             if(temp==0){
                 Product phone= phoneConverter.convertToEntity(p);
                 phoneService.save(phone);
+                p.setId(phone.getId());
                 response.setData(p);
                 response.setSuccessCode(SuccessCode.PRODUCT_CREATE_SUCCESS);
             }
