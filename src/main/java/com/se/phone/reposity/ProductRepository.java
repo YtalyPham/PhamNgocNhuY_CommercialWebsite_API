@@ -29,5 +29,5 @@ public interface ProductRepository extends JpaRepository<Product, Integer>{
     List<Product> searchByBrand(@Param("id") int id);
     
     @Query("SELECT p FROM Product p WHERE LOWER(CONCAT(p.name, p.brand, p.category)) LIKE %:name%")
-    public Optional<Product> searchAll(@Param("name") String keyword);
+    public List<Product> searchAll(@Param("name") String keyword);
 }

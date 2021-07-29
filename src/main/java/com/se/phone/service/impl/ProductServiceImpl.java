@@ -106,7 +106,7 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
-    public Optional<Product> getAllSearch(String keyword) {
+    public List<Product> getAllSearch(String keyword) {
         return productRepository.searchAll(keyword); 
     }
     

@@ -118,8 +118,8 @@ public class ProductController {
      @GetMapping("/product/searchAll/{name}") 
     public ResponseEntity<ResponseDTO> searchAll(@PathVariable String name)throws DataNotFoundException{
         ResponseDTO response = new ResponseDTO(); 
-            Optional<Product> list= phoneService.getAllSearch(name.toLowerCase());
-            if(list.isPresent()){
+            List<Product> list= phoneService.getAllSearch(name.toLowerCase());
+            if(list.size()>0){
                 response.setData(list.stream().map(phoneConverter::convertToDTO).collect(Collectors.toList()));
                 response.setSuccessCode(SuccessCode.PRODUCT_FIND_SUCCESS);
             }else{
