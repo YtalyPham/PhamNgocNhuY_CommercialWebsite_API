@@ -100,7 +100,7 @@ public class CategoryController {
     public ResponseEntity<ResponseDTO> searchByName(@PathVariable String name)throws DataNotFoundException{
         ResponseDTO response = new ResponseDTO();
         List<Category> list=categoryService.getAllSearch(name.toLowerCase());
-        if(list.size()==0){
+        if(list.size()>0){
             response.setData(list.stream().map(categoryConverter::convertToDTO).collect(Collectors.toList()));
             response.setSuccessCode(SuccessCode.CATEGORY_FIND_SUCCESS);
         }else{

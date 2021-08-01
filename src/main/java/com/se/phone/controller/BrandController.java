@@ -88,7 +88,7 @@ public class BrandController {
     public ResponseEntity<ResponseDTO> searchByName(@PathVariable String name)throws DataNotFoundException{
         ResponseDTO response = new ResponseDTO();
         List<Brand> list=brandService.getAllSearch(name.toLowerCase());
-        if(list.size()<=0){
+        if(list.size()>0){
             response.setData(list.stream().map(brandConverter::convertToDTO).collect(Collectors.toList()));
             response.setSuccessCode(SuccessCode.BRAND_FIND_SUCCESS);
         }else{

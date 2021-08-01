@@ -190,11 +190,11 @@ public class ProductController {
             ProductDetail o= optionService.getById(p.getProductDetailId());
             Category c= catagoryService.getById(p.getCategoryId());
             Brand pr= producerService.getById(p.getBrandId());
-            if(o!=null&&c!=null&&pr!=null){
+            //if(o!=null&&c!=null&&pr!=null){
                 phone.setProductDetail(o);  
                 phone.setCategory(c);
                 phone.setBrand(pr);  
-            }
+           //}
             phoneService.save(phone);
              response.setData(phoneConverter.convertToDTO(phone));
              response.setSuccessCode(SuccessCode.PRODUCT_UPDATE_SUCCESS);
